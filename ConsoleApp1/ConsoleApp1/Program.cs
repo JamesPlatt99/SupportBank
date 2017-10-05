@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,24 +12,77 @@ namespace SupportBank
 {
     class Program
     {
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();       
+
         static void Main(string[] args)
         {
-            Dictionary<string,Person> people = GetTransactions();
+            var config = new LoggingConfiguration();
+            var target = new FileTarget { FileName = "SupportBankLog.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
+            config.AddTarget("File Logger", target);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+            LogManager.Configuration = config;
+            Logissue("The program was started", LogLevel.Info);
+
+            Dictionary<string, Person> people = new Dictionary<string, Person>();
+
             while (true)
             {
+                switch (fileType())
+                {
+                    case 1:
+                        Logissue("User chose the 'CSV' file type.", LogLevel.Info);
+                        CSVParser csvParser = new CSVParser();
+                        people = csvParser.GetTransactions();
+                        break;
+                    case 2:
+                        JsonParser jsonParser = new JsonParser();
+                        people = jsonParser.GetTranscations();
+                        break;
+                    case 3:
+                        XMLParser xmlParser = new XMLParser();
+                        break;
+                }
+
                 switch (MenuOption())
                 {
                     case 1:
+                        Logissue("User chose the 'ListAll' option.", LogLevel.Info);
                         ListAll(people);
                         break;
                     case 2:
+                        Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
                         ListAccount(people);
                         break;
                 }
             }
 
         }
-        static void ListAccount(Dictionary<string,Person> people)
+        static int? fileType()
+        {
+            string input;
+            int output;
+            Console.WriteLine("Choose the file type to readfrom: ");
+            Console.WriteLine("     1. CSV");
+            Console.WriteLine("     2. JSON");
+            Console.WriteLine("     3. XML");
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (int.TryParse(input, out output))
+                {
+                    if (output > 0 && output <= 3)
+                    {
+                        return output;
+                    }
+                    else
+                    {
+                        Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
+                        Console.WriteLine("Invalid input, please try again.");
+                    }
+                }
+            }
+        }
+        static void ListAccount(Dictionary<string, Person> people)
         {
             string account = "";
             Boolean validInput = false;
@@ -40,23 +97,25 @@ namespace SupportBank
                 }
                 else
                 {
+                    Logissue(String.Format("Invalid input \"{0}\" from user", account), LogLevel.Warn);
                     Console.WriteLine(" Invalid input, pleaese try again.");
                 }
             }
             person = people[account];
             Console.WriteLine("   Date, From, To, Narrative, Amount");
-            foreach(Transaction transaction in person.transactions)
+            foreach (Transaction transaction in person.transactions)
             {
-                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}",transaction.Date, transaction.From.Name, transaction.To.Name, transaction.Narrative,transaction.Amount);
+                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date, transaction.From.Name, transaction.To.Name, transaction.Narrative, transaction.Amount);
             }
-
+            Console.WriteLine();
         }
         static void ListAll(Dictionary<string, Person> people)
         {
-            foreach(KeyValuePair<string,Person> person in people)
+            foreach (KeyValuePair<string, Person> person in people)
             {
-                Console.WriteLine(" Name: {0}; Balance: {1};",person.Value.Name, person.Value.Balance);
+                Console.WriteLine(" Name: {0}; Balance: {1};", person.Value.Name, person.Value.Balance);
             }
+                Console.WriteLine();
         }
         static int? MenuOption()
         {
@@ -72,69 +131,26 @@ namespace SupportBank
             {
                 Console.Write("  :");
                 input = Console.ReadLine();
-                if (int.TryParse(input, out choice) && choice > 0 && choice <= 2){
+                if (int.TryParse(input, out choice) && choice > 0 && choice <= 2) {
                     valid = true;
                     return choice;
                 }
+                Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
                 Console.WriteLine("Invalid input, please try again.");
             }
             return null;
-        }
-        static Dictionary<string, Person> GetTransactions()
+        }       
+
+        public static void Logissue(string message, LogLevel level)
         {
-            Dictionary<string, Person> people = new Dictionary<string, Person>();
-            //string path = "Transactions2014.csv";
-            string path = "DodgyTransactions2015.csv";
-            string tmp;
-            string[] line;
-            int curLine = 1;
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
-            tmp = file.ReadLine();
-            while ((tmp = file.ReadLine()) != null)
-            {
-                curLine++;
-                line = tmp.Split(',');
-                if (!people.ContainsKey(line[1])) {
-                    Person person = new Person();
-                    person.Name = line[1];
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(line[2]))
-                {
-                    Person person = new Person();
-                    person.Name = line[2];
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[line[1]];
-                Person payee = people[line[2]];
-                Transaction transaction = CreateTransaction(line, payer, payee);
-                if(transaction != null) { 
-                    payer.Balance -= transaction.Amount;
-                    payee.Balance += transaction.Amount;
-                    payer.transactions.Add(transaction);
-                    payee.transactions.Add(transaction);
-                }
-            }
-            return people;
+            LogEventInfo logEvent = new LogEventInfo();
+            logEvent.Level = level;
+            logEvent.Message = message;
+            logEvent.LoggerName = Environment.MachineName;
+            logEvent.TimeStamp = DateTime.Now;
+            logger.Log(logEvent);
         }
-        static Transaction CreateTransaction(string[] transactionAr, Person payer,Person payee)
-        {
-            Transaction transaction = new Transaction();
-            try { 
-            transaction.Date = DateTime.Parse(transactionAr[0]);
-            transaction.From = payer;
-            transaction.To = payee;
-            transaction.Narrative = transactionAr[3];
-            transaction.Amount = Convert.ToDouble(transactionAr[4]);
-            }
-            catch(Exception)
-            {
-                Console.WriteLine("Input \"{0}\" was not valid, please ensure data is in the correct format. This line has been skipped.", string.Join(",", transactionAr));
-                Console.WriteLine();
-                return null;
-            }
-            return transaction;
-        }
+        
     }
    
 }
