@@ -9,3 +9,4 @@ C:\LocalProjects\Training\SupportBankProject\ConsoleApp1\ConsoleApp1\bin\Debug\N
 C:\LocalProjects\Training\SupportBankProject\ConsoleApp1\ConsoleApp1\bin\Debug\NLog.xml
 C:\LocalProjects\Training\SupportBankProject\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.dll
 C:\LocalProjects\Training\SupportBankProject\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
+C:\LocalProjects\Training\SupportBankProject\ConsoleApp1\ConsoleApp1\bin\Debug\System.Xml.ReaderWriter.dll

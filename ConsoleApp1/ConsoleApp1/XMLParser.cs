@@ -63,11 +63,21 @@ namespace SupportBank
             output = Regex.Match(str,query).ToString();
             return output;
         }
- 
+        //private List<string> ParseFile()
+        //{
+        //    List<string> objects = new List<string>();
+        //    string path = "Transactions2012.XML";
+        //    string fileText;
+        //    string curObject;
+        //    System.IO.StreamReader file = new System.IO.StreamReader(path);
+        //    fileText = file.ReadToEnd();
+        //    xml
+        //    return objects;
+        //}
         private List<string> ParseFileHorribly()
         {
             List<string> objects = new List<string>();
-            string path = "Transactions2012.XML";
+            string path = Program.chooseFile("xml");
             string curLine;
             string curObject = "";
             System.IO.StreamReader file = new System.IO.StreamReader(path);

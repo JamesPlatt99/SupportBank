@@ -12,8 +12,7 @@ namespace SupportBank
         public Dictionary<string, Person> GetTransactions()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            //string path = "Transactions2014.csv";
-            string path = "DodgyTransactions2015.csv";
+            string path = Program.chooseFile("csv");
             string tmp;
             string[] line;
             int lineNumber = 1;
@@ -48,7 +47,6 @@ namespace SupportBank
             }
             return people;
         }
-
         public Transaction CreateTransaction(string[] transactionAr, Person payer, Person payee, int lineNumber)
         {
             Transaction transaction = new Transaction();
@@ -68,6 +66,6 @@ namespace SupportBank
                 return null;
             }
             return transaction;
-        }
+        }        
     }
 }

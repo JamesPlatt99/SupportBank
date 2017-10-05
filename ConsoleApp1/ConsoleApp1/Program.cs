@@ -35,26 +35,29 @@ namespace SupportBank
                         people = csvParser.GetTransactions();
                         break;
                     case 2:
+                        Logissue("User chose the 'Json' file type.", LogLevel.Info);
                         JsonParser jsonParser = new JsonParser();
                         people = jsonParser.GetTransactions();
                         break;
                     case 3:
+                        Logissue("User chose the 'XML' file type.", LogLevel.Info);
                         XMLParser xmlParser = new XMLParser();
                         people = xmlParser.GetTransactions();
                         break;
                 }
-
-                switch (MenuOption())
-                {
-                    case 1:
-                        Logissue("User chose the 'ListAll' option.", LogLevel.Info);
-                        ListAll(people);
-                        break;
-                    case 2:
-                        Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
-                        ListAccount(people);
-                        break;
-                }
+                int menuOption;
+                while((menuOption = MenuOption()) != 3)
+                    switch (menuOption)
+                    {
+                        case 1:
+                            Logissue("User chose the 'ListAll' option.", LogLevel.Info);
+                            ListAll(people);
+                            break;
+                        case 2:
+                            Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
+                            ListAccount(people);
+                            break;
+                    }
             }
 
         }
@@ -62,7 +65,7 @@ namespace SupportBank
         {
             string input;
             int output;
-            Console.WriteLine("Choose the file type to readfrom: ");
+            Console.WriteLine("Choose the file type to read from: ");
             Console.WriteLine("     1. CSV");
             Console.WriteLine("     2. JSON");
             Console.WriteLine("     3. XML");
@@ -118,7 +121,7 @@ namespace SupportBank
             }
                 Console.WriteLine();
         }
-        static int? MenuOption()
+        static int MenuOption()
         {
             Boolean valid = false;
             string input;
@@ -127,19 +130,20 @@ namespace SupportBank
             Console.WriteLine("------------------------------------");
             Console.WriteLine("  1. List all");
             Console.WriteLine("  2. List account");
+            Console.WriteLine("  3. Back");
 
             while (!valid)
             {
                 Console.Write("  :");
                 input = Console.ReadLine();
-                if (int.TryParse(input, out choice) && choice > 0 && choice <= 2) {
+                if (int.TryParse(input, out choice) && choice > 0 && choice <= 3) {
                     valid = true;
                     return choice;
                 }
                 Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
                 Console.WriteLine("Invalid input, please try again.");
             }
-            return null;
+            return 0;
         }       
 
         public static void Logissue(string message, LogLevel level)
@@ -151,7 +155,39 @@ namespace SupportBank
             logEvent.TimeStamp = DateTime.Now;
             logger.Log(logEvent);
         }
-        
+
+        public static string chooseFile(string filetype)
+        {
+            string[] files = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory());
+            string input;
+            int choice;
+            List<string> validFiles = new List<string>();
+            foreach (string file in files)
+            {
+                if (file.Substring(file.Length - filetype.Length, filetype.Length) == filetype)
+                {
+                    validFiles.Add(file);
+                }
+            }
+            Console.WriteLine("Choose file:");
+            for (int i = 0; i < validFiles.Count; i++)
+            {
+                Console.WriteLine("   {0} - {1}", i, validFiles[i]);
+            }
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (int.TryParse(input, out choice))
+                {
+                    if (choice >= 0 && choice < validFiles.Count)
+                    {
+                        return validFiles[choice];
+                    }
+                }
+                Console.WriteLine("Invalid input, please try again.");
+            }
+        }
+
     }
    
 }

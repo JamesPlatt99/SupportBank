@@ -41,7 +41,7 @@ namespace SupportBank
         private List<string> parseFile()
         {
             List<string> objects = new List<string>();
-            string path = "Transactions2013.json.txt";
+            string path = Program.chooseFile("json");
             string curLine;
             string curObject = "";
             System.IO.StreamReader file = new System.IO.StreamReader(path);
