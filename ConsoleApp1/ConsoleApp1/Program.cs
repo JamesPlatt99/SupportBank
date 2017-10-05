@@ -36,10 +36,11 @@ namespace SupportBank
                         break;
                     case 2:
                         JsonParser jsonParser = new JsonParser();
-                        people = jsonParser.GetTranscations();
+                        people = jsonParser.GetTransactions();
                         break;
                     case 3:
                         XMLParser xmlParser = new XMLParser();
+                        people = xmlParser.GetTransactions();
                         break;
                 }
 
@@ -105,7 +106,7 @@ namespace SupportBank
             Console.WriteLine("   Date, From, To, Narrative, Amount");
             foreach (Transaction transaction in person.transactions)
             {
-                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date, transaction.From.Name, transaction.To.Name, transaction.Narrative, transaction.Amount);
+                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
             }
             Console.WriteLine();
         }

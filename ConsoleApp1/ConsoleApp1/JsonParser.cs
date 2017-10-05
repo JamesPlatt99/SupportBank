@@ -12,26 +12,25 @@ namespace SupportBank
         public Dictionary<string, Person> GetTransactions()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            JsonObject curTransaction = new JsonObject();            
-            List<string> jsonObjects = GetJsonObjects();
+            Transaction transaction = new Transaction();            
+            List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
-                curTransaction = JsonConvert.DeserializeObject<JsonObject>(jsonObject + '}');
-                if (!people.ContainsKey(curTransaction.FromAccount))
+                transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
+                if (!people.ContainsKey(transaction.FromAccount))
                 {
                     Person person = new Person();
-                    person.Name = curTransaction.FromAccount;
+                    person.Name = transaction.FromAccount;
                     people.Add(person.Name, person);
                 }
-                if (!people.ContainsKey(curTransaction.ToAccount))
+                if (!people.ContainsKey(transaction.ToAccount))
                 {
                     Person person = new Person();
-                    person.Name = curTransaction.ToAccount;
+                    person.Name = transaction.ToAccount;
                     people.Add(person.Name, person);
                 }
-                Transaction transaction = CreateTransaction(curTransaction, people);
-                Person payer = transaction.From;
-                Person payee = transaction.To;
+                Person payer = people[transaction.FromAccount];
+                Person payee = people[transaction.ToAccount];
                 payer.Balance -= transaction.Amount;
                 payee.Balance += transaction.Amount;
                 payer.transactions.Add(transaction);
@@ -39,38 +38,18 @@ namespace SupportBank
             }
             return people;
         }
-        public Transaction CreateTransaction(JsonObject curTransaction, Dictionary<string, Person> people)
-        {
-            Transaction transaction = new Transaction();
-            try
-            {
-                transaction.Date = curTransaction.Date;
-                transaction.From = people[curTransaction.FromAccount];
-                transaction.To = people[curTransaction.ToAccount];
-                transaction.Narrative = curTransaction.Narrative;
-                transaction.Amount = curTransaction.Amount;
-                return transaction;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-
-        }
-        private List<string> GetJsonObjects()
+        private List<string> parseFile()
         {
             List<string> objects = new List<string>();
             string path = "Transactions2013.json.txt";
-            int lineNumber = 0;
             string curLine;
             string curObject = "";
             System.IO.StreamReader file = new System.IO.StreamReader(path);
             file.ReadLine();
             while ((curLine = file.ReadLine()) != "]")
             {
-                lineNumber++;
                 curObject += curLine;
-                if (lineNumber % 7 == 0)
+                if (curLine == "  },")
                 {
                     curObject = curObject.Remove(curObject.Length - 2);
                     objects.Add(curObject);

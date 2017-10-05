@@ -55,8 +55,8 @@ namespace SupportBank
             try
             {
                 transaction.Date = DateTime.Parse(transactionAr[0]);
-                transaction.From = payer;
-                transaction.To = payee;
+                transaction.FromAccount = payer.Name;
+                transaction.ToAccount = payee.Name;
                 transaction.Narrative = transactionAr[3];
                 transaction.Amount = Convert.ToDouble(transactionAr[4]);
             }
