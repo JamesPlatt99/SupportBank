@@ -11,7 +11,6 @@ namespace SupportBank
             string fileType;
             string file;
             Console.WriteLine();
-            Export exporter = new Export();
             Import importer = new Import();
             file = Program.chooseFile();
 
@@ -19,21 +18,10 @@ namespace SupportBank
             transactions = parserFactory.GetParser(file).GetTransactions();
 
             fileType = Program.chooseFileType("convert to");
-            file = file.Substring(0, file.Length - 4);
-            switch (fileType)
-            {
-                case "csv":
-                    exporter.CreateCSVFile(file + ".csv", transactions);
-                    break;
-
-                case "json":
-                    exporter.CreateJSONFile(file + ".json", transactions);
-                    break;
-
-                case "xml":
-                    exporter.CreateXMLFile(file + ".xml", transactions);
-                    break;
-            }
+            file = file.Substring(0, file.Length - 4) + fileType;
+            CreatorFactory creatorFactory = new CreatorFactory();
+            ICreator creator = creatorFactory.GetCreator(file);
+            creator.CreateFile(transactions);
         }
     }
 }

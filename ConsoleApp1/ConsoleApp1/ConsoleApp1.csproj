@@ -52,8 +52,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Convert.cs" />
+    <Compile Include="CreateCSVFile.cs" />
+    <Compile Include="CreateJsonFile.cs" />
+    <Compile Include="CreateXMLFile.cs" />
+    <Compile Include="CreatorFactory.cs" />
     <Compile Include="CSVParser.cs" />
     <Compile Include="Export.cs" />
+    <Compile Include="ICreator.cs" />
     <Compile Include="import.cs" />
     <Compile Include="IParser.cs" />
     <Compile Include="ParserFactory.cs" />
