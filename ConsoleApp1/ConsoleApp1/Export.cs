@@ -76,6 +76,7 @@ namespace SupportBank
                 file.WriteLine("  </SupportTransaction>");
             }
             file.WriteLine("</TransactionList>");
+            file.Close();
         }
         public string GetFileType()
         {
