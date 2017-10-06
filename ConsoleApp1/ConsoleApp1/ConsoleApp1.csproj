@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSVParser.cs" />
+    <Compile Include="Export.cs" />
+    <Compile Include="import.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="Person.cs" />
