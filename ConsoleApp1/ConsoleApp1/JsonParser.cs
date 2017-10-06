@@ -49,7 +49,7 @@ namespace SupportBank
             while ((curLine = file.ReadLine()) != "]")
             {
                 curObject += curLine;
-                if (curLine == "  },")
+                if (curLine == "  }," | curLine[curLine.Length-1] == '}')
                 {
                     curObject = curObject.Remove(curObject.Length - 2);
                     objects.Add(curObject);

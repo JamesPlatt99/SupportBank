@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SupportBank
 {
@@ -30,6 +31,7 @@ namespace SupportBank
                     CreateCSVFile(fileName,transactions);
                     break;
                 case "json":
+                    CreateJSONFile(fileName, transactions);
                     break;
                 case "xml":
                     break;
@@ -43,6 +45,17 @@ namespace SupportBank
             {
                 file.WriteLine("{0},{1},{2},{3},{4}", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
             }
+            file.Close();
+        }
+        public void CreateJSONFile(string filename, List<Transaction> transactions)
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
+            file.WriteLine("[");
+            foreach(Transaction transaction in transactions)
+            {
+                file.WriteLine(JsonConvert.SerializeObject(transaction));
+            }
+            file.WriteLine("]");
             file.Close();
         }
         public string GetFileType()
