@@ -96,6 +96,28 @@ namespace SupportBank
             choice = ValidInput(0, validFiles.Count - 1);
             return validFiles[choice];
         }
+        public static Dictionary<string, Person> ParseTransaction(Dictionary<string, Person> people, Transaction transaction)
+        {
+            if (!people.ContainsKey(transaction.FromAccount))
+                {
+                    Person person = new Person();
+                    person.Name = transaction.FromAccount;
+                    people.Add(person.Name, person);
+                }
+                if (!people.ContainsKey(transaction.ToAccount))
+                {
+                    Person person = new Person();
+                    person.Name = transaction.ToAccount;
+                    people.Add(person.Name, person);
+                }
+                Person payer = people[transaction.FromAccount];
+                Person payee = people[transaction.ToAccount];
+                payer.Balance -= transaction.Amount;
+                payee.Balance += transaction.Amount;
+                payer.transactions.Add(transaction);
+                payee.transactions.Add(transaction);
+            return people;
+        }
     }
    
 }

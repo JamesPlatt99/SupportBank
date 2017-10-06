@@ -17,24 +17,7 @@ namespace SupportBank
             foreach (string jsonObject in jsonObjects)
             {
                 transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
-                if (!people.ContainsKey(transaction.FromAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.FromAccount;
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(transaction.ToAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.ToAccount;
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[transaction.FromAccount];
-                Person payee = people[transaction.ToAccount];
-                payer.Balance -= transaction.Amount;
-                payee.Balance += transaction.Amount;
-                payer.transactions.Add(transaction);
-                payee.transactions.Add(transaction);
+                people = Program.ParseTransaction(people, transaction);
             }
             return people;
         }

@@ -54,12 +54,14 @@
     <Compile Include="CSVParser.cs" />
     <Compile Include="Export.cs" />
     <Compile Include="import.cs" />
+    <Compile Include="SupportTransaction.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="JsonParser.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XMLParser.cs" />
+    <Compile Include="TransactionList.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

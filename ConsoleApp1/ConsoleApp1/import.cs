@@ -72,7 +72,7 @@ namespace SupportBank
             Console.WriteLine("   Date, From, To, Narrative, Amount");
             foreach (Transaction transaction in person.transactions)
             {
-                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
+                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date.ToString("dd/MM/yyyy"), transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
             }
             Console.WriteLine();
         }

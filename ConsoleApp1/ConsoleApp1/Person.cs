@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class Person
+    public class Person
     {
         public List<Transaction> transactions = new List<Transaction>();
         public string Name { get; set; }

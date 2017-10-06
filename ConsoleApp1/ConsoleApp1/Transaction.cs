@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class Transaction
+    public class Transaction
     {
         public DateTime Date { get; set; }
         public String FromAccount { get; set; }

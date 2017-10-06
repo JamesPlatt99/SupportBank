@@ -1,97 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace SupportBank
 {
-    class XMLParser
+    public class XMLParser
     {
         public Dictionary<string,Person> GetTransactions()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            Transaction transaction = new Transaction();
-            List<string> XMLObjects = ParseFileHorribly();
-            foreach(string curObject in XMLObjects)
+            foreach(Transaction transaction in ParseFile(Program.chooseFile("xml")))
             {
-                transaction = getTransaction(curObject);
-                if (!people.ContainsKey(transaction.FromAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.FromAccount;
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(transaction.ToAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.ToAccount;
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[transaction.FromAccount];
-                Person payee = people[transaction.ToAccount];
-                payer.Balance -= transaction.Amount;
-                payee.Balance += transaction.Amount;
-                payer.transactions.Add(transaction);
-                payee.transactions.Add(transaction);
+                people = Program.ParseTransaction(people, transaction);
             }
-            
             return people;
         }
-        private Transaction getTransaction(string curObject)
+        private List<Transaction> ParseFile(string path)
         {
-            curObject = curObject.Replace("\"","");
-            Transaction transaction = new Transaction();
-            string query = @"(?<=Date=)\d{5}(?=>)";
-            transaction.Date = DateTime.FromOADate(Convert.ToDouble(regexSearch(curObject,query)));
-            query = @"(?<=From>).+(?=<\/From)";
-            transaction.FromAccount = regexSearch(curObject, query);
-            query = @"(?<=To>).+(?=<\/To)";
-            transaction.ToAccount = regexSearch(curObject, query);
-            query = @"(?<=<Description>).*(?=<\/Description>)";
-            transaction.Narrative = regexSearch(curObject, query);
-            query = @"(?<=<Value>).*(?=<\/Value>)";
-            transaction.Amount = Convert.ToDouble(regexSearch(curObject, query));
+            List<SupportTransaction> tempXMLTransactions = new List<SupportTransaction>();
+            List<Transaction> transactions = new List<Transaction>();
+            string fileText;
+            StreamReader file = new StreamReader(path);
+            fileText = file.ReadToEnd();
+            TransactionList result;
 
+            fileText = fileText.Replace("<Parties>","");
+            fileText = fileText.Replace("</Parties>","");
+            fileText = fileText.Replace("<SupportTransaction ", "<SupportTransaction> \n<");
+            fileText = fileText.Replace("Date=", "Date>");
+            fileText = fileText.Replace("\">", "</Date>");
+
+            XmlSerializer serializer = new XmlSerializer(typeof(TransactionList));
+            using (TextReader reader = new StringReader(fileText))
+            {
+                result = (TransactionList)serializer.Deserialize(reader);
+            }
+
+            foreach(SupportTransaction curTransaction in result.SupportTransaction)
+            {
+                transactions.Add(ConvertToTransaction(curTransaction));
+            }
+
+            return transactions;
+        }
+        private Transaction ConvertToTransaction(SupportTransaction supportTransaction)
+        {
+            Transaction transaction = new Transaction();
+            transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"","")));
+            transaction.FromAccount = supportTransaction.From;
+            transaction.ToAccount = supportTransaction.To;
+            transaction.Amount = Double.Parse(supportTransaction.Value);
+            transaction.Narrative = supportTransaction.Description;
             return transaction;
         }
-        private string regexSearch(string str, string query)
-        {
-            string output = "";
-            output = Regex.Match(str,query).ToString();
-            return output;
-        }
-        //private List<string> ParseFile()
-        //{
-        //    List<string> objects = new List<string>();
-        //    string path = "Transactions2012.XML";
-        //    string fileText;
-        //    string curObject;
-        //    System.IO.StreamReader file = new System.IO.StreamReader(path);
-        //    fileText = file.ReadToEnd();
-        //    xml
-        //    return objects;
-        //}
-        private List<string> ParseFileHorribly()
-        {
-            List<string> objects = new List<string>();
-            string path = Program.chooseFile("xml");
-            string curLine;
-            string curObject = "";
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
-            file.ReadLine();
-            while ((curLine = file.ReadLine()) != @"</TransactionList>")
-            {
-                curObject += curLine;
-                if (curLine == @"  </SupportTransaction>")
-                {
-                    objects.Add(curObject);
-                    curObject = "";
-                }
-            }
-            return objects;
-        }    
     }
 }
