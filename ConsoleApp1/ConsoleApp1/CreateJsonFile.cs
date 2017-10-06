@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace SupportBank
         {
             fileName = filename;
         }
-        public void CreateFile(string fileName, List<Transaction> transactions)
+        public void CreateFile(List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
             file.WriteLine("[");

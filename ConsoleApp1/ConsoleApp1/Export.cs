@@ -24,23 +24,9 @@ namespace SupportBank
                 Console.WriteLine();
             }
             Program.Logissue(String.Format("The user entered a list of {0} transactions.", transactions.Count + 1), LogLevel.Info);
-            switch (fileType)
-            {
-                case "csv":
-                    Program.Logissue("The user selected the csv datatype. [export]", LogLevel.Info);
-                    CreateCSVFile(fileName, transactions);
-                    break;
-
-                case "json":
-                    Program.Logissue("The user selected the json datatype. [export]", LogLevel.Info);
-                    CreateJSONFile(fileName, transactions);
-                    break;
-
-                case "xml":
-                    Program.Logissue("The user selected the xml datatype. [export]", LogLevel.Info);
-                    CreateXMLFile(fileName, transactions);
-                    break;
-            }
+            CreatorFactory creatorFactory = new CreatorFactory();
+            ICreator creator = creatorFactory.GetCreator(fileName);
+            creator.CreateFile(transactions);
         }
 
         public void Start(List<Transaction> transactions, string fileName)
