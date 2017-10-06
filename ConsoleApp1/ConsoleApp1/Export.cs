@@ -34,6 +34,7 @@ namespace SupportBank
                     CreateJSONFile(fileName, transactions);
                     break;
                 case "xml":
+                    CreateXMLFile(fileName, transactions);
                     break;
             }
         }
@@ -57,6 +58,24 @@ namespace SupportBank
             }
             file.WriteLine("]");
             file.Close();
+        }
+        public void CreateXMLFile(string filename, List<Transaction> transactions)
+        {
+            System.IO.StreamWriter file = new System.IO.StreamWriter(filename);
+            file.WriteLine("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
+            file.WriteLine("<TransactionList>");
+            foreach(Transaction transaction in transactions)
+            {
+                file.WriteLine("  <SupportTransaction Date=\"{0}\">",transaction.Date.ToOADate());
+                file.WriteLine("    <Description>{0}</Description>",transaction.Narrative);
+                file.WriteLine("    <Value>{0}</Value>",transaction.Amount);
+                file.WriteLine("    <Parties>");
+                file.WriteLine("      <From>{0}</From>",transaction.FromAccount);
+                file.WriteLine("      <To>{0}</To>",transaction.ToAccount);
+                file.WriteLine("    </Parties>");
+                file.WriteLine("  </SupportTransaction>");
+            }
+            file.WriteLine("</TransactionList>");
         }
         public string GetFileType()
         {
