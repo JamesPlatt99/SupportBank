@@ -5,12 +5,12 @@ using System.Xml.Serialization;
 
 namespace SupportBank
 {
-    public class XMLParser
+    public class XMLParser : IParser
     {
-        public Dictionary<string, Person> GetTransactions()
+        public Dictionary<string, Person> GetPeople(string path)
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            foreach (Transaction transaction in ParseFile(Program.chooseFile("xml")))
+            foreach (Transaction transaction in GetTransactions(path))
             {
                 people = Program.ParseTransaction(people, transaction);
             }
@@ -28,7 +28,7 @@ namespace SupportBank
             return transaction;
         }
 
-        private List<Transaction> ParseFile(string path)
+        public List<Transaction> GetTransactions(string path)
         {
             List<SupportTransaction> tempXMLTransactions = new List<SupportTransaction>();
             List<Transaction> transactions = new List<Transaction>();

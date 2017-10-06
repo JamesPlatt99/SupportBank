@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SupportBank
 {
-    class Export
+    internal class Export
     {
         public void Start()
         {
@@ -42,17 +42,41 @@ namespace SupportBank
                     break;
             }
         }
+
+        public void Start(List<Transaction> transactions, string fileName)
+        {
+            string fileType = GetFileType();
+            switch (fileType)
+            {
+                case "csv":
+                    Program.Logissue("The user selected the csv datatype. [convert]", LogLevel.Info);
+                    CreateCSVFile(fileName, transactions);
+                    break;
+
+                case "json":
+                    Program.Logissue("The user selected the json datatype. [convert]", LogLevel.Info);
+                    CreateJSONFile(fileName, transactions);
+                    break;
+
+                case "xml":
+                    Program.Logissue("The user selected the xml datatype. [convert]", LogLevel.Info);
+                    CreateXMLFile(fileName, transactions);
+                    break;
+            }
+        }
+
         public void CreateCSVFile(string fileName, List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
-            file.WriteLine("Date,From,To,Narrative,Amount");
+            file.WriteLine("Date,From,To,Narrative,Amount\n");
             foreach (Transaction transaction in transactions)
             {
-                file.WriteLine("{0},{1},{2},{3},{4}", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
+                file.WriteLine("{0},{1},{2},{3},{4}\n", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
             }
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
         }
+
         public void CreateJSONFile(string fileName, List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
@@ -65,6 +89,7 @@ namespace SupportBank
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
         }
+
         public void CreateXMLFile(string fileName, List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
@@ -72,19 +97,20 @@ namespace SupportBank
             file.WriteLine("<TransactionList>");
             foreach (Transaction transaction in transactions)
             {
-                file.WriteLine("  <SupportTransaction Date=\"{0}\">", transaction.Date.ToOADate());
-                file.WriteLine("    <Description>{0}</Description>", transaction.Narrative);
-                file.WriteLine("    <Value>{0}</Value>", transaction.Amount);
-                file.WriteLine("    <Parties>");
-                file.WriteLine("      <From>{0}</From>", transaction.FromAccount);
-                file.WriteLine("      <To>{0}</To>", transaction.ToAccount);
-                file.WriteLine("    </Parties>");
-                file.WriteLine("  </SupportTransaction>");
+                file.WriteLine("  <SupportTransaction Date=\"{0}\">\n", transaction.Date.ToOADate());
+                file.WriteLine("    <Description>{0}</Description>\n", transaction.Narrative);
+                file.WriteLine("    <Value>{0}</Value>\n", transaction.Amount);
+                file.WriteLine("    <Parties>\n");
+                file.WriteLine("      <From>{0}</From>\n", transaction.FromAccount);
+                file.WriteLine("      <To>{0}</To>\n", transaction.ToAccount);
+                file.WriteLine("    </Parties>\n");
+                file.WriteLine("  </SupportTransaction>\n");
             }
             file.WriteLine("</TransactionList>");
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
         }
+
         public string GetFileType()
         {
             string input;
@@ -96,6 +122,7 @@ namespace SupportBank
             }
             return input;
         }
+
         public string GetFileName()
         {
             string input = "";
@@ -106,6 +133,7 @@ namespace SupportBank
             }
             return input;
         }
+
         public Transaction GetTransaction()
         {
             Transaction transaction = new Transaction();

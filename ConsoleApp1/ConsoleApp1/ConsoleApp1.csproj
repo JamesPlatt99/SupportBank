@@ -51,9 +51,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Convert.cs" />
     <Compile Include="CSVParser.cs" />
     <Compile Include="Export.cs" />
     <Compile Include="import.cs" />
+    <Compile Include="IParser.cs" />
+    <Compile Include="ParserFactory.cs" />
     <Compile Include="SupportTransaction.cs" />
     <Compile Include="Transaction.cs" />
     <Compile Include="JsonParser.cs" />

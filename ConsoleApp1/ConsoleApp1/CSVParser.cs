@@ -4,18 +4,17 @@ using System.Collections.Generic;
 
 namespace SupportBank
 {
-    internal class CSVParser
+    internal class CSVParser : IParser
     {
-        public Dictionary<string, Person> GetTransactions()
+        public Dictionary<string, Person> GetPeople(string path)
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            string path = Program.chooseFile("csv");
             string tmp;
             string[] line;
             int lineNumber = 1;
             System.IO.StreamReader file = new System.IO.StreamReader(path);
             tmp = file.ReadLine();
-            while ((tmp = file.ReadLine()) != null)
+            while ((tmp = file.ReadLine()) != null && tmp != "")
             {
                 lineNumber++;
                 line = tmp.Split(',');
@@ -43,6 +42,42 @@ namespace SupportBank
                 }
             }
             return people;
+        }
+
+        public List<Transaction> GetTransactions(string path)
+        {
+            List<Transaction> transactions = new List<Transaction>();
+            Dictionary<string, Person> people = new Dictionary<string, Person>();
+            string tmp;
+            string[] line;
+            int lineNumber = 1;
+            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            tmp = file.ReadLine();
+            while ((tmp = file.ReadLine()) != null)
+            {
+                lineNumber++;
+                line = tmp.Split(',');
+                if (!people.ContainsKey(line[1]))
+                {
+                    Person person = new Person();
+                    person.Name = line[1];
+                    people.Add(person.Name, person);
+                }
+                if (!people.ContainsKey(line[2]))
+                {
+                    Person person = new Person();
+                    person.Name = line[2];
+                    people.Add(person.Name, person);
+                }
+                Person payer = people[line[1]];
+                Person payee = people[line[2]];
+                Transaction transaction = CreateTransaction(line, payer, payee, lineNumber);
+                if (transaction != null)
+                {
+                    transactions.Add(transaction);
+                }
+            }
+            return transactions;
         }
 
         public Transaction CreateTransaction(string[] transactionAr, Person payer, Person payee, int lineNumber)

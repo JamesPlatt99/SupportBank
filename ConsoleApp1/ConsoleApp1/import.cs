@@ -9,45 +9,25 @@ namespace SupportBank
         public void Start()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            int fileType;
-            while ((fileType = FileType()) != 4)
-            {
-                switch (fileType)
+            string filePath;
+            filePath = Program.chooseFile();
+            ParserFactory parserFactory = new ParserFactory(filePath);
+            people = parserFactory.GetParser.GetPeople(filePath);
+            int menuOption;
+            while ((menuOption = ImportMenuOption()) != 3)
+                switch (menuOption)
                 {
                     case 1:
-                        Program.Logissue("User chose the 'CSV' file type. [import]", LogLevel.Info);
-                        CSVParser csvParser = new CSVParser();
-                        people = csvParser.GetTransactions();
+                        Program.Logissue("User chose the 'ListAll' option.", LogLevel.Info);
+                        ListAll(people);
                         break;
 
                     case 2:
-                        Program.Logissue("User chose the 'Json' file type. [import]", LogLevel.Info);
-                        JsonParser jsonParser = new JsonParser();
-                        people = jsonParser.GetTransactions();
-                        break;
-
-                    case 3:
-                        Program.Logissue("User chose the 'XML' file type. [import]", LogLevel.Info);
-                        XMLParser xmlParser = new XMLParser();
-                        people = xmlParser.GetTransactions();
+                        Program.Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
+                        ListAccount(people);
                         break;
                 }
-
-                int menuOption;
-                while ((menuOption = ImportMenuOption()) != 3)
-                    switch (menuOption)
-                    {
-                        case 1:
-                            Program.Logissue("User chose the 'ListAll' option.", LogLevel.Info);
-                            ListAll(people);
-                            break;
-
-                        case 2:
-                            Program.Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
-                            ListAccount(people);
-                            break;
-                    }
-            }
+            
         }
 
         private void ListAccount(Dictionary<string, Person> people)
@@ -101,11 +81,11 @@ namespace SupportBank
             return choice;
         }
 
-        private static int FileType()
+        public int FileType(string method)
         {
             string input;
             int output;
-            Console.WriteLine("Choose the file type to read from: ");
+            Console.WriteLine("Choose the file type to {0}: ", method);
             Console.WriteLine("     1. CSV");
             Console.WriteLine("     2. JSON");
             Console.WriteLine("     3. XML");

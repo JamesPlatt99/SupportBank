@@ -21,7 +21,7 @@ namespace SupportBank
 
             MainMenu();
             int choice;
-            while ((choice = ValidInput(1, 3)) != 3)
+            while ((choice = ValidInput(1, 4)) != 4)
             {
                 switch (choice)
                 {
@@ -36,6 +36,12 @@ namespace SupportBank
                         Export export = new Export();
                         export.Start();
                         break;
+
+                    case 3:
+                        Logissue("The user chose to convert.", LogLevel.Info);
+                        ConvertFile convert = new ConvertFile();
+                        convert.Start();
+                        break;
                 }
                 MainMenu();
             }
@@ -47,8 +53,9 @@ namespace SupportBank
             Console.WriteLine("-----------------------------");
             Console.WriteLine(" 1. Import");
             Console.WriteLine(" 2. Export");
+            Console.WriteLine(" 3. Convert");
             Console.WriteLine();
-            Console.WriteLine(" 3. Exit");
+            Console.WriteLine(" 4. Exit");
         }
 
         public static int ValidInput(int minValue, int maxValue)
@@ -79,14 +86,14 @@ namespace SupportBank
             logger.Log(logEvent);
         }
 
-        public static string chooseFile(string filetype)
+        public static string chooseFile()
         {
             string[] files = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory());
             int choice;
             List<string> validFiles = new List<string>();
             foreach (string file in files)
             {
-                if (file.Substring(file.Length - filetype.Length, filetype.Length) == filetype)
+                if (file.Substring(file.Length - 4, 4) == ".csv" | file.Substring(file.Length - 4, 4) == ".xml" | file.Substring(file.Length - 5, 5) == ".json")
                 {
                     validFiles.Add(file);
                 }
@@ -122,5 +129,6 @@ namespace SupportBank
             payee.transactions.Add(transaction);
             return people;
         }
+        
     }
 }
