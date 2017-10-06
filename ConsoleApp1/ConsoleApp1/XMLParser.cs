@@ -1,26 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Serialization;
 
 namespace SupportBank
 {
     public class XMLParser
     {
-        public Dictionary<string,Person> GetTransactions()
+        public Dictionary<string, Person> GetTransactions()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            foreach(Transaction transaction in ParseFile(Program.chooseFile("xml")))
+            foreach (Transaction transaction in ParseFile(Program.chooseFile("xml")))
             {
                 people = Program.ParseTransaction(people, transaction);
             }
             return people;
         }
+
+        private Transaction ConvertToTransaction(SupportTransaction supportTransaction)
+        {
+            Transaction transaction = new Transaction();
+            transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"", "")));
+            transaction.FromAccount = supportTransaction.From;
+            transaction.ToAccount = supportTransaction.To;
+            transaction.Amount = Double.Parse(supportTransaction.Value);
+            transaction.Narrative = supportTransaction.Description;
+            return transaction;
+        }
+
         private List<Transaction> ParseFile(string path)
         {
             List<SupportTransaction> tempXMLTransactions = new List<SupportTransaction>();
@@ -30,8 +37,8 @@ namespace SupportBank
             fileText = file.ReadToEnd();
             TransactionList result;
 
-            fileText = fileText.Replace("<Parties>","");
-            fileText = fileText.Replace("</Parties>","");
+            fileText = fileText.Replace("<Parties>", "");
+            fileText = fileText.Replace("</Parties>", "");
             fileText = fileText.Replace("<SupportTransaction ", "<SupportTransaction> \n<");
             fileText = fileText.Replace("Date=", "Date>");
             fileText = fileText.Replace("\">", "</Date>");
@@ -42,22 +49,12 @@ namespace SupportBank
                 result = (TransactionList)serializer.Deserialize(reader);
             }
 
-            foreach(SupportTransaction curTransaction in result.SupportTransaction)
+            foreach (SupportTransaction curTransaction in result.SupportTransaction)
             {
                 transactions.Add(ConvertToTransaction(curTransaction));
             }
 
             return transactions;
-        }
-        private Transaction ConvertToTransaction(SupportTransaction supportTransaction)
-        {
-            Transaction transaction = new Transaction();
-            transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"","")));
-            transaction.FromAccount = supportTransaction.From;
-            transaction.ToAccount = supportTransaction.To;
-            transaction.Amount = Double.Parse(supportTransaction.Value);
-            transaction.Narrative = supportTransaction.Description;
-            return transaction;
         }
     }
 }

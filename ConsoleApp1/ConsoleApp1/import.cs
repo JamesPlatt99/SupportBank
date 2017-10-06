@@ -1,13 +1,10 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class Import
+    internal class Import
     {
         public void Start()
         {
@@ -18,17 +15,19 @@ namespace SupportBank
                 switch (fileType)
                 {
                     case 1:
-                        Program.Logissue("User chose the 'CSV' file type.", LogLevel.Info);
+                        Program.Logissue("User chose the 'CSV' file type. [import]", LogLevel.Info);
                         CSVParser csvParser = new CSVParser();
                         people = csvParser.GetTransactions();
                         break;
+
                     case 2:
-                        Program.Logissue("User chose the 'Json' file type.", LogLevel.Info);
+                        Program.Logissue("User chose the 'Json' file type. [import]", LogLevel.Info);
                         JsonParser jsonParser = new JsonParser();
                         people = jsonParser.GetTransactions();
                         break;
+
                     case 3:
-                        Program.Logissue("User chose the 'XML' file type.", LogLevel.Info);
+                        Program.Logissue("User chose the 'XML' file type. [import]", LogLevel.Info);
                         XMLParser xmlParser = new XMLParser();
                         people = xmlParser.GetTransactions();
                         break;
@@ -42,6 +41,7 @@ namespace SupportBank
                             Program.Logissue("User chose the 'ListAll' option.", LogLevel.Info);
                             ListAll(people);
                             break;
+
                         case 2:
                             Program.Logissue("User chose the 'ListAccount' option.", LogLevel.Info);
                             ListAccount(people);
@@ -49,7 +49,8 @@ namespace SupportBank
                     }
             }
         }
-        void ListAccount(Dictionary<string, Person> people)
+
+        private void ListAccount(Dictionary<string, Person> people)
         {
             string account = "";
             Boolean ValidInput = false;
@@ -60,7 +61,7 @@ namespace SupportBank
                 account = Console.ReadLine();
                 if (people.ContainsKey(account))
                 {
-                   ValidInput = true;
+                    ValidInput = true;
                 }
                 else
                 {
@@ -76,7 +77,8 @@ namespace SupportBank
             }
             Console.WriteLine();
         }
-        void ListAll(Dictionary<string, Person> people)
+
+        private void ListAll(Dictionary<string, Person> people)
         {
             foreach (KeyValuePair<string, Person> person in people)
             {
@@ -84,7 +86,8 @@ namespace SupportBank
             }
             Console.WriteLine();
         }
-        int ImportMenuOption()
+
+        private int ImportMenuOption()
         {
             int choice = 0;
             Console.WriteLine("Support Bank");
@@ -97,7 +100,8 @@ namespace SupportBank
             choice = Program.ValidInput(1, 3);
             return choice;
         }
-        static int FileType()
+
+        private static int FileType()
         {
             string input;
             int output;

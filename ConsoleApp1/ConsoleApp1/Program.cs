@@ -1,20 +1,16 @@
-﻿using Newtonsoft.Json;
-using NLog;
+﻿using NLog;
 using NLog.Config;
 using NLog.Targets;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class Program
+    internal class Program
     {
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();       
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var config = new LoggingConfiguration();
             var target = new FileTarget { FileName = "SupportBankLog.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
@@ -26,14 +22,17 @@ namespace SupportBank
             MainMenu();
             int choice;
             while ((choice = ValidInput(1, 3)) != 3)
-            {                
+            {
                 switch (choice)
                 {
                     case 1:
+                        Logissue("The user chose to import.", LogLevel.Info);
                         Import import = new Import();
                         import.Start();
                         break;
+
                     case 2:
+                        Logissue("The user chose to export.", LogLevel.Info);
                         Export export = new Export();
                         export.Start();
                         break;
@@ -41,7 +40,8 @@ namespace SupportBank
                 MainMenu();
             }
         }
-        static void MainMenu()
+
+        private static void MainMenu()
         {
             Console.WriteLine("Support Bank");
             Console.WriteLine("-----------------------------");
@@ -50,6 +50,7 @@ namespace SupportBank
             Console.WriteLine();
             Console.WriteLine(" 3. Exit");
         }
+
         public static int ValidInput(int minValue, int maxValue)
         {
             string inputStr;
@@ -57,16 +58,17 @@ namespace SupportBank
             while (true)
             {
                 inputStr = Console.ReadLine();
-                if(int.TryParse(inputStr, out inputInt))
+                if (int.TryParse(inputStr, out inputInt))
                 {
-                    if(inputInt >= minValue && inputInt <= maxValue)
+                    if (inputInt >= minValue && inputInt <= maxValue)
                     {
                         return inputInt;
                     }
                 }
                 Console.WriteLine("Please try again.");
             }
-        }    
+        }
+
         public static void Logissue(string message, LogLevel level)
         {
             LogEventInfo logEvent = new LogEventInfo();
@@ -76,6 +78,7 @@ namespace SupportBank
             logEvent.TimeStamp = DateTime.Now;
             logger.Log(logEvent);
         }
+
         public static string chooseFile(string filetype)
         {
             string[] files = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory());
@@ -96,28 +99,28 @@ namespace SupportBank
             choice = ValidInput(0, validFiles.Count - 1);
             return validFiles[choice];
         }
+
         public static Dictionary<string, Person> ParseTransaction(Dictionary<string, Person> people, Transaction transaction)
         {
             if (!people.ContainsKey(transaction.FromAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.FromAccount;
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(transaction.ToAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.ToAccount;
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[transaction.FromAccount];
-                Person payee = people[transaction.ToAccount];
-                payer.Balance -= transaction.Amount;
-                payee.Balance += transaction.Amount;
-                payer.transactions.Add(transaction);
-                payee.transactions.Add(transaction);
+            {
+                Person person = new Person();
+                person.Name = transaction.FromAccount;
+                people.Add(person.Name, person);
+            }
+            if (!people.ContainsKey(transaction.ToAccount))
+            {
+                Person person = new Person();
+                person.Name = transaction.ToAccount;
+                people.Add(person.Name, person);
+            }
+            Person payer = people[transaction.FromAccount];
+            Person payee = people[transaction.ToAccount];
+            payer.Balance -= transaction.Amount;
+            payee.Balance += transaction.Amount;
+            payer.transactions.Add(transaction);
+            payee.transactions.Add(transaction);
             return people;
         }
     }
-   
 }

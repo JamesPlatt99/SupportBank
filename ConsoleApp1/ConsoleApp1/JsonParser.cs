@@ -1,18 +1,14 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class JsonParser
+    internal class JsonParser
     {
         public Dictionary<string, Person> GetTransactions()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            Transaction transaction = new Transaction();            
+            Transaction transaction = new Transaction();
             List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
@@ -21,6 +17,7 @@ namespace SupportBank
             }
             return people;
         }
+
         private List<string> parseFile()
         {
             List<string> objects = new List<string>();
@@ -32,7 +29,7 @@ namespace SupportBank
             while ((curLine = file.ReadLine()) != "]")
             {
                 curObject += curLine;
-                if (curLine == "  }," | curLine[curLine.Length-1] == '}')
+                if (curLine == "  }," | curLine[curLine.Length - 1] == '}')
                 {
                     curObject = curObject.Remove(curObject.Length - 2);
                     objects.Add(curObject);

@@ -1,13 +1,10 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class CSVParser
+    internal class CSVParser
     {
         public Dictionary<string, Person> GetTransactions()
         {
@@ -47,6 +44,7 @@ namespace SupportBank
             }
             return people;
         }
+
         public Transaction CreateTransaction(string[] transactionAr, Person payer, Person payee, int lineNumber)
         {
             Transaction transaction = new Transaction();
@@ -66,6 +64,6 @@ namespace SupportBank
                 return null;
             }
             return transaction;
-        }        
+        }
     }
 }
