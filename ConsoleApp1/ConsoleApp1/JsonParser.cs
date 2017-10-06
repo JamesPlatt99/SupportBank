@@ -48,6 +48,7 @@ namespace SupportBank
                     curObject = "";
                 }
             }
+            file.Close();
             return objects;
         }
     }

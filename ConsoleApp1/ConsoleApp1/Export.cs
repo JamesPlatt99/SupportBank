@@ -11,7 +11,7 @@ namespace SupportBank
         {
             List<Transaction> transactions = new List<Transaction>();
             string input = "y";
-            string fileType = GetFileType();
+            string fileType = Program.chooseFileType("export to");
             string fileName = String.Format("{0}.{1}", GetFileName(), fileType);
 
             while (input == "y")
@@ -45,7 +45,7 @@ namespace SupportBank
 
         public void Start(List<Transaction> transactions, string fileName)
         {
-            string fileType = GetFileType();
+            string fileType = Program.chooseFileType("convert to");
             switch (fileType)
             {
                 case "csv":
@@ -109,18 +109,6 @@ namespace SupportBank
             file.WriteLine("</TransactionList>");
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
-        }
-
-        public string GetFileType()
-        {
-            string input;
-            Console.WriteLine("Please enter your desired filetype:");
-            Console.WriteLine("   csv/json/xml");
-            while ((input = Console.ReadLine()) != "csv" && input != "json" && input != "xml")
-            {
-                input = Console.ReadLine();
-            }
-            return input;
         }
 
         public string GetFileName()

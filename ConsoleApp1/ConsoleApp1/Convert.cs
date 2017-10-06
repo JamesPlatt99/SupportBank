@@ -8,13 +8,13 @@ namespace SupportBank
         public void Start()
         {
             List<Transaction> transactions = new List<Transaction>();
-            int fileType;
+            string fileType;
             string file;
             Console.WriteLine();
             Export exporter = new Export();
             Import importer = new Import();
             file = Program.chooseFile();
-            switch (file.Substring(file.Length -4,4))
+            switch (file.Substring(file.Length - 4, 4))
             {
                 case ".csv":
                     CSVParser csvParser = new CSVParser();
@@ -32,19 +32,19 @@ namespace SupportBank
                     break;
             }
 
-            fileType = importer.FileType("convert to");
+            fileType = Program.chooseFileType("convert to");
             file = file.Substring(0, file.Length - 4);
             switch (fileType)
             {
-                case 1:
+                case "csv":
                     exporter.CreateCSVFile(file + ".csv", transactions);
                     break;
 
-                case 2:
+                case "json":
                     exporter.CreateJSONFile(file + ".json", transactions);
                     break;
 
-                case 3:
+                case "xml":
                     exporter.CreateXMLFile(file + ".xml", transactions);
                     break;
             }

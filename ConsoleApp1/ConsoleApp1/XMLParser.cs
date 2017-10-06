@@ -53,7 +53,7 @@ namespace SupportBank
             {
                 transactions.Add(ConvertToTransaction(curTransaction));
             }
-
+            file.Close();
             return transactions;
         }
     }

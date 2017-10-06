@@ -93,9 +93,12 @@ namespace SupportBank
             List<string> validFiles = new List<string>();
             foreach (string file in files)
             {
-                if (file.Substring(file.Length - 4, 4) == ".csv" | file.Substring(file.Length - 4, 4) == ".xml" | file.Substring(file.Length - 5, 5) == ".json")
+                foreach (validFiles fileType in Enum.GetValues(typeof(validFiles)))
                 {
-                    validFiles.Add(file);
+                    if (file.Substring(file.Length - fileType.ToString().Length) == fileType.ToString())
+                    {
+                        validFiles.Add(file);
+                    }
                 }
             }
             Console.WriteLine("Choose file:");
@@ -105,6 +108,53 @@ namespace SupportBank
             }
             choice = ValidInput(0, validFiles.Count - 1);
             return validFiles[choice];
+        }
+
+        public static string chooseFileType(string method)
+        {
+            string input;
+            int output;
+            int i = 0;
+            Console.WriteLine("Choose the file type to {0}: ", method);
+
+            foreach (Program.validFiles fileType in Enum.GetValues(typeof(Program.validFiles)))
+            {
+                Console.WriteLine("    {0}. {1}", i, fileType.ToString());
+                i++;
+            }
+            Console.WriteLine();
+            Console.WriteLine("     {0}. Back", i + 1);
+            while (true)
+            {
+                input = Console.ReadLine();
+                if (int.TryParse(input, out output))
+                {
+                    if (output >= 0 && output <= i + 1)
+                    {
+                        int j = 0;
+                        foreach (Program.validFiles fileType in Enum.GetValues(typeof(Program.validFiles)))
+                        {
+                            if (j == output)
+                            {
+                                return fileType.ToString();
+                            }
+                            j++;
+                        }
+                    }
+                    else
+                    {
+                        Program.Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
+                        Console.WriteLine("Invalid input, please try again.");
+                    }
+                }
+            }
+        }
+
+        public enum validFiles
+        {
+            csv,
+            json,
+            xml
         }
 
         public static Dictionary<string, Person> ParseTransaction(Dictionary<string, Person> people, Transaction transaction)
@@ -129,6 +179,5 @@ namespace SupportBank
             payee.transactions.Add(transaction);
             return people;
         }
-        
     }
 }

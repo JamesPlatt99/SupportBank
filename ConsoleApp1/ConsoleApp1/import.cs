@@ -27,7 +27,6 @@ namespace SupportBank
                         ListAccount(people);
                         break;
                 }
-            
         }
 
         private void ListAccount(Dictionary<string, Person> people)
@@ -79,34 +78,6 @@ namespace SupportBank
 
             choice = Program.ValidInput(1, 3);
             return choice;
-        }
-
-        public int FileType(string method)
-        {
-            string input;
-            int output;
-            Console.WriteLine("Choose the file type to {0}: ", method);
-            Console.WriteLine("     1. CSV");
-            Console.WriteLine("     2. JSON");
-            Console.WriteLine("     3. XML");
-            Console.WriteLine();
-            Console.WriteLine("     4. Back");
-            while (true)
-            {
-                input = Console.ReadLine();
-                if (int.TryParse(input, out output))
-                {
-                    if (output > 0 && output <= 4)
-                    {
-                        return output;
-                    }
-                    else
-                    {
-                        Program.Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
-                        Console.WriteLine("Invalid input, please try again.");
-                    }
-                }
-            }
         }
     }
 }

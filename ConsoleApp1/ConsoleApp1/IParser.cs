@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace SupportBank
 {
-    interface IParser
+    internal interface IParser
     {
         Dictionary<string, Person> GetPeople(string path);
+
         List<Transaction> GetTransactions(string path);
     }
 }

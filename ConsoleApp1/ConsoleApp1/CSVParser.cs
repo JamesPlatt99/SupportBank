@@ -41,6 +41,7 @@ namespace SupportBank
                     payee.transactions.Add(transaction);
                 }
             }
+            file.Close();
             return people;
         }
 
