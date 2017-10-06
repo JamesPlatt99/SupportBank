@@ -1,25 +1,23 @@
 ﻿namespace SupportBank
 {
     internal class ParserFactory
-    {
-        public dynamic GetParser;
-
-        public ParserFactory(string filePath)
+    {      
+        public IParser GetParser(string filePath)
         {
-            switch (filePath.Substring(filePath.Length - 4, 4))
+            switch(filePath.Substring(filePath.Length - 4, 4))
             {
                 case ".csv":
-                    GetParser = new CSVParser();
-                    break;
+                    return new CSVParser(filePath);
 
                 case "json":
-                    GetParser = new JsonParser();
-                    break;
+                    return new JsonParser(filePath);
 
                 case ".xml":
-                    GetParser = new XMLParser();
-                    break;
+                    return new XMLParser(filePath);
+                default:
+                    return null;
             }
+
         }
     }
 }

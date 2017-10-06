@@ -11,8 +11,8 @@ namespace SupportBank
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             string filePath;
             filePath = Program.chooseFile();
-            ParserFactory parserFactory = new ParserFactory(filePath);
-            people = parserFactory.GetParser.GetPeople(filePath);
+            ParserFactory parserFactory = new ParserFactory();
+            people = parserFactory.GetParser(filePath).GetPeople();
             int menuOption;
             while ((menuOption = ImportMenuOption()) != 3)
                 switch (menuOption)

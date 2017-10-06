@@ -4,8 +4,8 @@ namespace SupportBank
 {
     internal interface IParser
     {
-        Dictionary<string, Person> GetPeople(string path);
+        Dictionary<string, Person> GetPeople();
 
-        List<Transaction> GetTransactions(string path);
+        List<Transaction> GetTransactions();
     }
 }

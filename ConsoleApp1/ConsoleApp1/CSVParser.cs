@@ -6,13 +6,18 @@ namespace SupportBank
 {
     internal class CSVParser : IParser
     {
-        public Dictionary<string, Person> GetPeople(string path)
+        private string filePath;
+        public CSVParser(string filepath)
+        {
+            filePath = filepath;
+        }
+        public Dictionary<string, Person> GetPeople()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             string tmp;
             string[] line;
             int lineNumber = 1;
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            System.IO.StreamReader file = new System.IO.StreamReader(filePath);
             tmp = file.ReadLine();
             while ((tmp = file.ReadLine()) != null && tmp != "")
             {
@@ -45,14 +50,14 @@ namespace SupportBank
             return people;
         }
 
-        public List<Transaction> GetTransactions(string path)
+        public List<Transaction> GetTransactions()
         {
             List<Transaction> transactions = new List<Transaction>();
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             string tmp;
             string[] line;
             int lineNumber = 1;
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            System.IO.StreamReader file = new System.IO.StreamReader(filePath);
             tmp = file.ReadLine();
             while ((tmp = file.ReadLine()) != null)
             {

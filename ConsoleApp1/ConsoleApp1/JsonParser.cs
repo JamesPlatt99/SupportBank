@@ -5,11 +5,17 @@ namespace SupportBank
 {
     internal class JsonParser : IParser
     {
-        public Dictionary<string, Person> GetPeople(string path)
+        private string filePath;
+        public JsonParser(string filepath)
+        {
+            filePath = filepath;
+        }
+
+        public Dictionary<string, Person> GetPeople()
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             Transaction transaction = new Transaction();
-            List<string> jsonObjects = parseFile(path);
+            List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
                 transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
@@ -18,11 +24,11 @@ namespace SupportBank
             return people;
         }
 
-        public List<Transaction> GetTransactions(string path)
+        public List<Transaction> GetTransactions()
         {
             List<Transaction> transactions = new List<Transaction>();
             Transaction transaction = new Transaction();
-            List<string> jsonObjects = parseFile(path);
+            List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
                 transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
@@ -31,12 +37,12 @@ namespace SupportBank
             return transactions;
         }
 
-        private List<string> parseFile(string path)
+        private List<string> parseFile()
         {
             List<string> objects = new List<string>();
             string curLine;
             string curObject = "";
-            System.IO.StreamReader file = new System.IO.StreamReader(path);
+            System.IO.StreamReader file = new System.IO.StreamReader(filePath);
             file.ReadLine();
             while ((curLine = file.ReadLine()) != "]")
             {
