@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SupportBank
 {
@@ -10,6 +11,7 @@ namespace SupportBank
             List<Transaction> transactions = new List<Transaction>();
             string fileType;
             string file;
+            string newFile;
             Console.WriteLine();
             Import importer = new Import();
             file = Program.chooseFile();
@@ -18,10 +20,12 @@ namespace SupportBank
             transactions = parserFactory.GetParser(file).GetTransactions();
 
             fileType = Program.chooseFileType("convert to");
-            file = file.Substring(0, file.Length - 4) + fileType;
+            newFile = file.Substring(0, file.Length - 4) + fileType;
             CreatorFactory creatorFactory = new CreatorFactory();
-            ICreator creator = creatorFactory.GetCreator(file);
+            ICreator creator = creatorFactory.GetCreator(newFile);
             creator.CreateFile(transactions);
+
+            File.Delete(file);
         }
     }
 }

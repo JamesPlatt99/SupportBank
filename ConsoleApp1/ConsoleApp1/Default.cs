@@ -14,11 +14,14 @@ namespace SupportBank
             string name = GetName();
             int choice = 0;
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            JsonParser parser = new JsonParser("Default.json");
+            JsonParser parser = new JsonParser("Global.json");
             List<Transaction> transactions;
+            Congregator congregator = new Congregator();
 
             while ((choice = GetChoice()) != 4)
             {
+                parser = new JsonParser("Global.json");
+                congregator.CreateGlobalFile();
                 transactions = parser.GetTransactions();
                 people = parser.GetPeople();
                 switch (choice)
@@ -41,7 +44,7 @@ namespace SupportBank
         private void AddTransaction(string name, List<Transaction> transactions)
         {
             transactions.Add(CreateTransaction(name));
-            string path = "Default.json";
+            string path = "Other.json";
             CreateJsonFile creator = new CreateJsonFile(path);
             creator.CreateFile(transactions);
         }
@@ -103,7 +106,7 @@ namespace SupportBank
             {
                 foreach(Transaction transaction in people[name].transactions)
                 {
-                    Console.WriteLine("{0:dd/MM/yyyy}, {1}, {2}, {3}, {4}", transaction.Date, transaction.ToAccount, transaction.FromAccount, transaction.Narrative, transaction.Amount);
+                    Console.WriteLine("{0:dd/MM/yyyy}, {1}, {2}, {3}, £{4:0.00}", transaction.Date, transaction.ToAccount, transaction.FromAccount, transaction.Narrative, transaction.Amount);
                 }
             }
         }

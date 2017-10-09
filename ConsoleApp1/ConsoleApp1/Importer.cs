@@ -52,7 +52,7 @@ namespace SupportBank
             Console.WriteLine("   Date, From, To, Narrative, Amount");
             foreach (Transaction transaction in person.transactions)
             {
-                Console.WriteLine("   {0}, {1}, {2}, {3}, {4}", transaction.Date.ToString("dd/MM/yyyy"), transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
+                Console.WriteLine("   {0}, {1}, {2}, {3}, £{4:0.00}", transaction.Date.ToString("dd/MM/yyyy"), transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
             }
             Console.WriteLine();
         }
@@ -61,7 +61,7 @@ namespace SupportBank
         {
             foreach (KeyValuePair<string, Person> person in people)
             {
-                Console.WriteLine(" Name: {0}; Balance: {1};", person.Value.Name, person.Value.Balance);
+                Console.WriteLine(" Name: {0}; Balance: £{1:0.00};", person.Value.Name, person.Value.Balance);
             }
             Console.WriteLine();
         }

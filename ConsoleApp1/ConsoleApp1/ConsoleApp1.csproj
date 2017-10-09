@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Congregator.cs" />
     <Compile Include="Convert.cs" />
     <Compile Include="CreateCSVFile.cs" />
     <Compile Include="CreateJsonFile.cs" />
