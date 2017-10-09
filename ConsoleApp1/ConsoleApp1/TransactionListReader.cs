@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SupportBank
 {
-    internal class TransactionReader
+    internal class TransactionListReader
     {
         public void Start()
         {
@@ -38,18 +38,28 @@ namespace SupportBank
             transactions = parserFactory.GetParser(filePath).GetTransactions();
 
             people = parserFactory.GetParser(filePath).GetPeople();
-            people = UpdateBalances(people, transactions);
         }
 
-        private Dictionary<string, Person> UpdateBalances(Dictionary<string, Person> people, List<Transaction> transactions)
+        public static Dictionary<string, Person> ParseTransaction(Dictionary<string, Person> people, Transaction transaction)
         {
-            foreach (Transaction transaction in transactions)
+            if (!people.ContainsKey(transaction.FromAccount))
             {
-                people[transaction.FromAccount].Balance -= transaction.Amount;
-                people[transaction.ToAccount].Balance += transaction.Amount;
-                people[transaction.FromAccount].transactions.Add(transaction);
-                people[transaction.ToAccount].transactions.Add(transaction);
+                Person person = new Person();
+                person.Name = transaction.FromAccount;
+                people.Add(person.Name, person);
             }
+            if (!people.ContainsKey(transaction.ToAccount))
+            {
+                Person person = new Person();
+                person.Name = transaction.ToAccount;
+                people.Add(person.Name, person);
+            }
+            Person payer = people[transaction.FromAccount];
+            Person payee = people[transaction.ToAccount];
+            payer.Balance -= transaction.Amount;
+            payee.Balance += transaction.Amount;
+            payer.transactions.Add(transaction);
+            payee.transactions.Add(transaction);
             return people;
         }
 

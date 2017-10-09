@@ -53,18 +53,7 @@ namespace SupportBank
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             foreach (Transaction transaction in transactions)
             {
-                if (!people.ContainsKey(transaction.FromAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.FromAccount;
-                    people.Add(transaction.FromAccount, person);
-                }
-                if (!people.ContainsKey(transaction.ToAccount))
-                {
-                    Person person = new Person();
-                    person.Name = transaction.ToAccount;
-                    people.Add(transaction.ToAccount, person);
-                }
+                people = TransactionListReader.ParseTransaction(people, transaction);
             }
             return people;
         }
@@ -82,7 +71,9 @@ namespace SupportBank
             }
             catch (Exception)
             {
+                Console.ForegroundColor = System.ConsoleColor.Red;
                 Console.WriteLine("Input \"{0}\" was not valid, please ensure data is in the correct format. This line has been skipped.", string.Join(",", transactionAr));
+                Console.ForegroundColor = System.ConsoleColor.White;
                 Console.WriteLine();
                 Program.logger.Log(LogLevel.Warn, String.Format("Invalid line {0} , \"{1}\" was read from file", lineNumber, string.Join(",", transactionAr)));
                 return null;

@@ -35,7 +35,7 @@ namespace SupportBank
             List<string> validFiles = new List<string>();
             foreach (string file in files)
             {
-                foreach (Program.validFiles fileType in Enum.GetValues(typeof(Program.validFiles)))
+                foreach (Program.ValidFiles fileType in Enum.GetValues(typeof(Program.ValidFiles)))
                 {
                     if (file.Substring(file.Length - fileType.ToString().Length) == fileType.ToString() && file.Substring(file.Length - 12, 12) != @"\Global.json")
                     {

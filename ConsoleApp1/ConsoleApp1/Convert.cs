@@ -14,7 +14,7 @@ namespace SupportBank
             string newFile;
             string newFileType;
             Console.WriteLine();
-            TransactionReader importer = new TransactionReader();
+            TransactionListReader importer = new TransactionListReader();
             curFile = Program.ChooseFile();
 
             ParserFactory parserFactory = new ParserFactory();

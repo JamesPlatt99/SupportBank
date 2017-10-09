@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using NLog;
+using System;
 using System.Collections.Generic;
 
 namespace SupportBank
@@ -19,8 +21,20 @@ namespace SupportBank
             List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
-                transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
-                people = Program.ParseTransaction(people, transaction);
+                try
+                {
+                    transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
+                    people = TransactionListReader.ParseTransaction(people, transaction);
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = System.ConsoleColor.Red;
+                    Console.WriteLine("Input was not valid, please ensure data is in the correct format. This line has been skipped.");
+                    Console.WriteLine(e.Message);
+                    Console.ForegroundColor = System.ConsoleColor.White;
+                    Console.WriteLine();
+                    Program.logger.Log(LogLevel.Warn, "Invalid file format was parsed. The erronous line was skipped.");
+                }
             }
             return people;
         }
@@ -32,8 +46,19 @@ namespace SupportBank
             List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
+                try { 
                 transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
                 transactions.Add(transaction);
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = System.ConsoleColor.Red;
+                    Console.WriteLine("Input was not valid, please ensure data is in the correct format. This line has been skipped.");
+                    Console.WriteLine(e.Message);
+                    Console.ForegroundColor = System.ConsoleColor.White;
+                    Console.WriteLine();
+                    Program.logger.Log(LogLevel.Warn, "Invalid file format was parsed. The erronous line was skipped.");
+                }
             }
             return transactions;
         }

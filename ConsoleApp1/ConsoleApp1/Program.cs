@@ -12,6 +12,8 @@ namespace SupportBank
 
         private static void Main()
         {
+            Console.ForegroundColor = System.ConsoleColor.White;
+            Console.BackgroundColor = System.ConsoleColor.DarkCyan;
             int choice;
             ConfigureNLog();
             logger.Log(LogLevel.Info, "The program was started.");
@@ -27,7 +29,7 @@ namespace SupportBank
 
                     case 1:
                         logger.Log(LogLevel.Info, "The user chose the import option.");
-                        TransactionReader transactionReader = new TransactionReader();
+                        TransactionListReader transactionReader = new TransactionListReader();
                         transactionReader.Start();
                         break;
 
@@ -84,7 +86,7 @@ namespace SupportBank
             List<string> validFiles = new List<string>();
             foreach (string file in files)
             {
-                foreach (validFiles fileType in Enum.GetValues(typeof(validFiles)))
+                foreach (ValidFiles fileType in Enum.GetValues(typeof(ValidFiles)))
                 {
                     if (file.Substring(file.Length - fileType.ToString().Length) == fileType.ToString())
                     {
@@ -108,7 +110,7 @@ namespace SupportBank
             int i = 0;
             Console.WriteLine("Choose the file type to {0}: ", method);
 
-            foreach (Program.validFiles fileType in Enum.GetValues(typeof(Program.validFiles)))
+            foreach (Program.ValidFiles fileType in Enum.GetValues(typeof(Program.ValidFiles)))
             {
                 Console.WriteLine("    {0}. {1}", i, fileType.ToString());
                 i++;
@@ -123,7 +125,7 @@ namespace SupportBank
                     if (output >= 0 && output <= i + 1)
                     {
                         int j = 0;
-                        foreach (Program.validFiles fileType in Enum.GetValues(typeof(Program.validFiles)))
+                        foreach (Program.ValidFiles fileType in Enum.GetValues(typeof(Program.ValidFiles)))
                         {
                             if (j == output)
                             {
@@ -141,35 +143,12 @@ namespace SupportBank
             }
         }
 
-        public enum validFiles
+        public enum ValidFiles
         {
             csv,
             json,
             xml
-        }
-
-        public static Dictionary<string, Person> ParseTransaction(Dictionary<string, Person> people, Transaction transaction)
-        {
-            if (!people.ContainsKey(transaction.FromAccount))
-            {
-                Person person = new Person();
-                person.Name = transaction.FromAccount;
-                people.Add(person.Name, person);
-            }
-            if (!people.ContainsKey(transaction.ToAccount))
-            {
-                Person person = new Person();
-                person.Name = transaction.ToAccount;
-                people.Add(person.Name, person);
-            }
-            Person payer = people[transaction.FromAccount];
-            Person payee = people[transaction.ToAccount];
-            payer.Balance -= transaction.Amount;
-            payee.Balance += transaction.Amount;
-            payer.transactions.Add(transaction);
-            payee.transactions.Add(transaction);
-            return people;
-        }
+        }        
 
         private static void ConfigureNLog()
         {

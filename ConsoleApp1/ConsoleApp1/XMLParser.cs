@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -19,7 +20,7 @@ namespace SupportBank
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             foreach (Transaction transaction in GetTransactions())
             {
-                people = Program.ParseTransaction(people, transaction);
+                people = TransactionListReader.ParseTransaction(people, transaction);
             }
             return people;
         }
@@ -27,11 +28,23 @@ namespace SupportBank
         private Transaction ConvertToTransaction(SupportTransaction supportTransaction)
         {
             Transaction transaction = new Transaction();
+            try
+            {
             transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"", "")));
             transaction.FromAccount = supportTransaction.From;
             transaction.ToAccount = supportTransaction.To;
             transaction.Amount = Double.Parse(supportTransaction.Value);
             transaction.Narrative = supportTransaction.Description;
+            }catch(Exception e)
+            {
+                Console.ForegroundColor = System.ConsoleColor.Red;
+                Console.WriteLine("Input was not valid, please ensure data is in the correct format. This line has been skipped.");
+                Console.WriteLine(e.Message);
+                Console.ForegroundColor = System.ConsoleColor.White;
+                Console.WriteLine();
+                Program.logger.Log(LogLevel.Warn, "Invalid file format was parsed. The erronous line was skipped.");
+                return null;
+            }
             return transaction;
         }
 
@@ -39,6 +52,7 @@ namespace SupportBank
         {
             List<SupportTransaction> tempXMLTransactions = new List<SupportTransaction>();
             List<Transaction> transactions = new List<Transaction>();
+            Transaction transaction;
             string fileText;
             StreamReader file = new StreamReader(filePath);
             fileText = file.ReadToEnd();
@@ -58,7 +72,11 @@ namespace SupportBank
 
             foreach (SupportTransaction curTransaction in result.SupportTransaction)
             {
-                transactions.Add(ConvertToTransaction(curTransaction));
+                transaction = ConvertToTransaction(curTransaction);
+                if (transaction != null)
+                { 
+                    transactions.Add(transaction);
+                }
             }
             file.Close();
             return transactions;
