@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using NLog;
+﻿using NLog;
 using System;
 using System.Collections.Generic;
 
@@ -36,7 +35,6 @@ namespace SupportBank
             ICreator creator = creatorFactory.GetCreator(fileName);
             creator.CreateFile(transactions);
         }
-        
 
         public string GetFileName()
         {

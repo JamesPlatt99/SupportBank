@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SupportBank
+﻿namespace SupportBank
 {
-    class CreatorFactory
+    internal class CreatorFactory
     {
         public ICreator GetCreator(string fileName)
         {
@@ -14,10 +8,13 @@ namespace SupportBank
             {
                 case ".csv":
                     return new CreateCSVFile(fileName);
+
                 case "json":
                     return new CreateJsonFile(fileName);
+
                 case ".xml":
                     return new CreateXMLFile(fileName);
+
                 default:
                     return null;
             }

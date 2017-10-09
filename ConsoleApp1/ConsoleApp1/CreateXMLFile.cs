@@ -1,20 +1,19 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class CreateXMLFile : ICreator
+    internal class CreateXMLFile : ICreator
     {
         private string fileName;
+
         public CreateXMLFile(string filename)
         {
             fileName = filename;
         }
-        public void CreateFile( List<Transaction> transactions)
+
+        public void CreateFile(List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
             file.WriteLine("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");

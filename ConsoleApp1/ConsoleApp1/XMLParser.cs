@@ -8,6 +8,7 @@ namespace SupportBank
     public class XMLParser : IParser
     {
         private string filePath;
+
         public XMLParser(string filepath)
         {
             filePath = filepath;

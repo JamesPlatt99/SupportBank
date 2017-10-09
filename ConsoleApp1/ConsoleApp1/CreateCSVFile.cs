@@ -1,19 +1,18 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class CreateCSVFile : ICreator
+    internal class CreateCSVFile : ICreator
     {
         private string fileName;
+
         public CreateCSVFile(string filename)
         {
             fileName = filename;
         }
+
         public void CreateFile(List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);

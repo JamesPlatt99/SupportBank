@@ -1,91 +1,63 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using CsvHelper;
 
 namespace SupportBank
 {
     internal class CSVParser : IParser
     {
         private string filePath;
+
         public CSVParser(string filepath)
         {
             filePath = filepath;
         }
-        public Dictionary<string, Person> GetPeople()
-        {
-            Dictionary<string, Person> people = new Dictionary<string, Person>();
-            string tmp;
-            string[] line;
-            int lineNumber = 1;
-            System.IO.StreamReader file = new System.IO.StreamReader(filePath);
-            tmp = file.ReadLine();
-            while ((tmp = file.ReadLine()) != null && tmp != "")
-            {
-                lineNumber++;
-                line = tmp.Split(',');
-                if (!people.ContainsKey(line[1]))
-                {
-                    Person person = new Person();
-                    person.Name = line[1];
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(line[2]))
-                {
-                    Person person = new Person();
-                    person.Name = line[2];
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[line[1]];
-                Person payee = people[line[2]];
-                Transaction transaction = CreateTransaction(line, payer, payee, lineNumber);
-                if (transaction != null)
-                {
-                    payer.Balance -= transaction.Amount;
-                    payee.Balance += transaction.Amount;
-                    payer.transactions.Add(transaction);
-                    payee.transactions.Add(transaction);
-                }
-            }
-            file.Close();
-            return people;
-        }
 
         public List<Transaction> GetTransactions()
         {
-            List<Transaction> transactions = new List<Transaction>();
-            Dictionary<string, Person> people = new Dictionary<string, Person>();
-            string tmp;
-            string[] line;
-            int lineNumber = 1;
             System.IO.StreamReader file = new System.IO.StreamReader(filePath);
-            tmp = file.ReadLine();
-            while ((tmp = file.ReadLine()) != null)
+            List<Transaction> transactions = new List<Transaction>();
+            var csv = new CsvReader(file);
+            Transaction transaction;
+
+            while (csv.Read())
             {
-                lineNumber++;
-                line = tmp.Split(',');
-                if (!people.ContainsKey(line[1]))
-                {
-                    Person person = new Person();
-                    person.Name = line[1];
-                    people.Add(person.Name, person);
-                }
-                if (!people.ContainsKey(line[2]))
-                {
-                    Person person = new Person();
-                    person.Name = line[2];
-                    people.Add(person.Name, person);
-                }
-                Person payer = people[line[1]];
-                Person payee = people[line[2]];
-                Transaction transaction = CreateTransaction(line, payer, payee, lineNumber);
-                if (transaction != null)
-                {
-                    transactions.Add(transaction);
-                }
+                transaction = new Transaction();
+                transaction.Date = csv.GetField<DateTime>(0);
+                transaction.FromAccount = csv.GetField<String>(1);
+                transaction.ToAccount = csv.GetField<String>(2);
+                transaction.Narrative = csv.GetField<String>(3);
+                transaction.Amount = csv.GetField<Double>(4);
+                transactions.Add(transaction);
             }
             return transactions;
         }
 
+        public Dictionary<string, Person> GetPeople()
+        {
+            List<Transaction> transactions = GetTransactions();
+            Dictionary<string, Person> people = new Dictionary<string, Person>();
+            foreach(Transaction transaction in transactions)
+            {
+                if (!people.ContainsKey(transaction.FromAccount))
+                {
+                    Person person = new Person();
+                    person.Name = transaction.FromAccount;
+                    people.Add(transaction.FromAccount, person);
+                }
+                if (!people.ContainsKey(transaction.ToAccount))
+                {
+                    Person person = new Person();
+                    person.Name = transaction.ToAccount;
+                    people.Add(transaction.ToAccount, person);
+                }
+                people[transaction.FromAccount].Balance -= transaction.Amount;
+                people[transaction.ToAccount].Balance += transaction.Amount;
+            }
+            return people;
+        }
+        
         public Transaction CreateTransaction(string[] transactionAr, Person payer, Person payee, int lineNumber)
         {
             Transaction transaction = new Transaction();

@@ -6,6 +6,7 @@ namespace SupportBank
     internal class JsonParser : IParser
     {
         private string filePath;
+
         public JsonParser(string filepath)
         {
             filePath = filepath;
