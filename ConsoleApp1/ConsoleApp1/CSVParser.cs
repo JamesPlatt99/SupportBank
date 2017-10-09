@@ -20,16 +20,28 @@ namespace SupportBank
             List<Transaction> transactions = new List<Transaction>();
             var csv = new CsvReader(file);
             Transaction transaction;
+            int lineNumber = 0;
 
             while (csv.Read())
             {
+                lineNumber++;
                 transaction = new Transaction();
-                transaction.Date = csv.GetField<DateTime>(0);
-                transaction.FromAccount = csv.GetField<String>(1);
-                transaction.ToAccount = csv.GetField<String>(2);
-                transaction.Narrative = csv.GetField<String>(3);
-                transaction.Amount = csv.GetField<Double>(4);
-                transactions.Add(transaction);
+                try
+                {
+                    transaction.Date = csv.GetField<DateTime>(0);
+                    transaction.FromAccount = csv.GetField<String>(1);
+                    transaction.ToAccount = csv.GetField<String>(2);
+                    transaction.Narrative = csv.GetField<String>(3);
+                    transaction.Amount = csv.GetField<Double>(4);
+                    transactions.Add(transaction);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error:");
+                    Console.WriteLine("   " + e.Message);
+                    Console.WriteLine("   Line {0} is in an incorrect format, skipping line.",lineNumber);
+                    Program.Logissue(String.Format("{0} : Occurred while reading csv file.",e.Message),LogLevel.Error);
+                }
             }
             return transactions;
         }
