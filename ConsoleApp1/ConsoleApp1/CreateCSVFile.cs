@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Generic;
+using CsvHelper;
 
 namespace SupportBank
 {
@@ -16,10 +17,11 @@ namespace SupportBank
         public void CreateFile(List<Transaction> transactions)
         {
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
+            var csv = new CsvWriter(file);
             file.WriteLine("Date,From,To,Narrative,Amount\n");
             foreach (Transaction transaction in transactions)
             {
-                file.WriteLine("{0},{1},{2},{3},{4}\n", transaction.Date, transaction.FromAccount, transaction.ToAccount, transaction.Narrative, transaction.Amount);
+                csv.WriteRecord(transaction);
             }
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);

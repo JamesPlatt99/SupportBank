@@ -66,6 +66,9 @@ namespace SupportBank
                 }
                 people[transaction.FromAccount].Balance -= transaction.Amount;
                 people[transaction.ToAccount].Balance += transaction.Amount;
+                people[transaction.FromAccount].transactions.Add(transaction);
+                people[transaction.ToAccount].transactions.Add(transaction);
+
             }
             return people;
         }
