@@ -62,9 +62,9 @@
     <Compile Include="CreatorFactory.cs" />
     <Compile Include="CSVParser.cs" />
     <Compile Include="Default.cs" />
-    <Compile Include="Export.cs" />
+    <Compile Include="FileExporter.cs" />
+    <Compile Include="TransactionReader.cs" />
     <Compile Include="ICreator.cs" />
-    <Compile Include="Importer.cs" />
     <Compile Include="IParser.cs" />
     <Compile Include="ParserFactory.cs" />
     <Compile Include="SupportTransaction.cs" />

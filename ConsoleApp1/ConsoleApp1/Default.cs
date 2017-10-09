@@ -7,14 +7,14 @@ namespace SupportBank
     {
         public Default()
         {
-            string name = GetName();
+            string name = GetUsersName();
             int choice = 0;
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             JsonParser parser = new JsonParser("Global.json");
             List<Transaction> transactions;
             Congregator congregator = new Congregator();
 
-            while ((choice = GetChoice()) != 4)
+            while ((choice = GetFunctionChoice()) != 4)
             {
                 parser = new JsonParser("Global.json");
                 congregator.CreateGlobalFile();
@@ -60,7 +60,7 @@ namespace SupportBank
             Console.WriteLine("  2. Send");
 
             transaction.Date = DateTime.Now;
-            input = Program.ValidInput(1, 2);
+            input = Program.GetIntValueBetween(1, 2);
             if (input == 1)
             {
                 transaction.ToAccount = name;
@@ -113,7 +113,7 @@ namespace SupportBank
             }
         }
 
-        private int GetChoice()
+        private int GetFunctionChoice()
         {
             Boolean validInput = false;
             int output;
@@ -142,7 +142,7 @@ namespace SupportBank
             return 0;
         }
 
-        private string GetName()
+        private string GetUsersName()
         {
             string name = "";
             Console.WriteLine();

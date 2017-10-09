@@ -31,7 +31,7 @@ namespace SupportBank
             }
             file.WriteLine("</TransactionList>");
             file.Close();
-            Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
+            Program.logger.Log(LogLevel.Info, String.Format("The file {0} was created successfully.", fileName));
         }
     }
 }

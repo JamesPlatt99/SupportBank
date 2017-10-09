@@ -9,23 +9,25 @@ namespace SupportBank
         public void Start()
         {
             List<Transaction> transactions = new List<Transaction>();
-            string fileType;
-            string file;
+            string curFile;
+            string curFileType;
             string newFile;
+            string newFileType;
             Console.WriteLine();
-            Import importer = new Import();
-            file = Program.ChooseFile();
+            TransactionReader importer = new TransactionReader();
+            curFile = Program.ChooseFile();
 
             ParserFactory parserFactory = new ParserFactory();
-            transactions = parserFactory.GetParser(file).GetTransactions();
+            transactions = parserFactory.GetParser(curFile).GetTransactions();
+            curFileType = parserFactory.GetFileExtension(curFile);
 
-            fileType = Program.ChooseFileType("convert to");
-            newFile = file.Substring(0, file.Length - 4) + fileType;
+            newFileType = Program.ChooseFileType("convert to");
+            newFile = curFile.Substring(0, curFile.Length - curFileType.Length) + "." + newFileType;
             CreatorFactory creatorFactory = new CreatorFactory();
             ICreator creator = creatorFactory.GetCreator(newFile);
             creator.CreateFile(transactions);
 
-            File.Delete(file);
+            File.Delete(curFile);
         }
     }
 }

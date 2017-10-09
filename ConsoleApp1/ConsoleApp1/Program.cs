@@ -8,63 +8,58 @@ namespace SupportBank
 {
     internal class Program
     {
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        public static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
-        private static void Main(string[] args)
+        private static void Main()
         {
-            var config = new LoggingConfiguration();
-            var target = new FileTarget { FileName = "SupportBankLog.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
-            config.AddTarget("File Logger", target);
-            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
-            LogManager.Configuration = config;
-            Logissue("The program was started", LogLevel.Info);
-
-            MainMenu();
             int choice;
-            while ((choice = ValidInput(0, 4)) != 4)
+            ConfigureNLog();
+            logger.Log(LogLevel.Info, "The program was started.");
+            PrintMainMenu();
+            while ((choice = GetIntValueBetween(0, 4)) != 4)
             {
                 switch (choice)
                 {
                     case 0:
-                        Logissue("The user chose the default option", LogLevel.Info);
+                        logger.Log(LogLevel.Info, "The user chose the default option.");
                         Default def = new Default();
                         break;
 
                     case 1:
-                        Logissue("The user chose to import.", LogLevel.Info);
-                        Import import = new Import();
-                        import.Start();
+                        logger.Log(LogLevel.Info, "The user chose the import option.");
+                        TransactionReader transactionReader = new TransactionReader();
+                        transactionReader.Start();
                         break;
 
                     case 2:
-                        Logissue("The user chose to export.", LogLevel.Info);
-                        Export export = new Export();
-                        export.Start();
+                        logger.Log(LogLevel.Info, "The user chose the export option.");
+                        TransactionListCreator transactionListCreator = new TransactionListCreator();
+                        transactionListCreator.Start();
                         break;
 
                     case 3:
-                        Logissue("The user chose to convert.", LogLevel.Info);
+                        logger.Log(LogLevel.Info, "The user chose the convert option.");
                         ConvertFile convert = new ConvertFile();
                         convert.Start();
                         break;
                 }
-                MainMenu();
+                PrintMainMenu();
             }
         }
 
-        private static void MainMenu()
+        private static void PrintMainMenu()
         {
             Console.WriteLine("Support Bank");
             Console.WriteLine("-----------------------------");
             Console.WriteLine(" 0. Default");
-            Console.WriteLine(" 1. Import");
-            Console.WriteLine(" 2. Export");
+            Console.WriteLine(" 1. Read From file");
+            Console.WriteLine(" 2. Create new transactions list");
             Console.WriteLine(" 3. Convert");
             Console.WriteLine();
             Console.WriteLine(" 4. Exit");
         }
 
-        public static int ValidInput(int minValue, int maxValue)
+        public static int GetIntValueBetween(int minValue, int maxValue)
         {
             string inputStr;
             int inputInt;
@@ -80,16 +75,6 @@ namespace SupportBank
                 }
                 Console.WriteLine("Please try again.");
             }
-        }
-
-        public static void Logissue(string message, LogLevel level)
-        {
-            LogEventInfo logEvent = new LogEventInfo();
-            logEvent.Level = level;
-            logEvent.Message = message;
-            logEvent.LoggerName = Environment.MachineName;
-            logEvent.TimeStamp = DateTime.Now;
-            logger.Log(logEvent);
         }
 
         public static string ChooseFile()
@@ -112,7 +97,7 @@ namespace SupportBank
             {
                 Console.WriteLine("   {0} - {1}", i, validFiles[i]);
             }
-            choice = ValidInput(0, validFiles.Count - 1);
+            choice = GetIntValueBetween(0, validFiles.Count - 1);
             return validFiles[choice];
         }
 
@@ -149,7 +134,7 @@ namespace SupportBank
                     }
                     else
                     {
-                        Program.Logissue(String.Format("Invalid input \"{0}\" from user", input), LogLevel.Warn);
+                        Program.logger.Log(LogLevel.Warn, String.Format("Invalid input \"{0}\" from user", input));
                         Console.WriteLine("Invalid input, please try again.");
                     }
                 }
@@ -184,6 +169,15 @@ namespace SupportBank
             payer.transactions.Add(transaction);
             payee.transactions.Add(transaction);
             return people;
+        }
+
+        private static void ConfigureNLog()
+        {
+            var config = new LoggingConfiguration();
+            var target = new FileTarget { FileName = "SupportBankLog.log", Layout = @"${longdate} ${level} - ${logger}: ${message}" };
+            config.AddTarget("File Logger", target);
+            config.LoggingRules.Add(new LoggingRule("*", LogLevel.Debug, target));
+            LogManager.Configuration = config;
         }
     }
 }

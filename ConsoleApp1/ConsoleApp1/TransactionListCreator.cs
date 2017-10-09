@@ -4,14 +4,12 @@ using System.Collections.Generic;
 
 namespace SupportBank
 {
-    internal class Export
+    internal class TransactionListCreator
     {
         public void Start()
         {
             List<Transaction> transactions = new List<Transaction>();
             string input = "y";
-            string fileType = Program.ChooseFileType("export to");
-            string fileName = String.Format("{0}.{1}", GetFileName(), fileType);
 
             while (input == "y")
             {
@@ -19,13 +17,22 @@ namespace SupportBank
                 Console.WriteLine("-------------------");
                 transactions.Add(GetTransaction());
                 Console.Write("Add another? (y/n):");
-                input = Console.ReadLine().ToLower().ToCharArray()[0].ToString();
+                input = Console.ReadLine().ToLower()[0].ToString();
                 Console.WriteLine();
             }
-            Program.Logissue(String.Format("The user entered a list of {0} transactions.", transactions.Count + 1), LogLevel.Info);
+            Program.logger.Log(LogLevel.Info, String.Format("The user entered a list of {0} transactions.", transactions.Count + 1));
+
+            CreateFile(transactions);
+        }
+
+        private void CreateFile(List<Transaction> transactions)
+        {
+            string fileType = Program.ChooseFileType("export to");
+            string fileName = String.Format("{0}.{1}", GetFileName(), fileType);
             CreatorFactory creatorFactory = new CreatorFactory();
             ICreator creator = creatorFactory.GetCreator(fileName);
             creator.CreateFile(transactions);
+
         }
 
         public void Start(List<Transaction> transactions, string fileName)

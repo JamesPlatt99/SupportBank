@@ -40,9 +40,10 @@ namespace SupportBank
                     Console.WriteLine("Error:");
                     Console.WriteLine("   " + e.Message);
                     Console.WriteLine("   Line {0} is in an incorrect format, skipping line.", lineNumber);
-                    Program.Logissue(String.Format("{0} : Occurred while reading csv file.", e.Message), LogLevel.Error);
+                    Program.logger.Log(LogLevel.Error, String.Format("{0} : Occurred while reading csv file.", e.Message));
                 }
             }
+            file.Close();
             return transactions;
         }
 
@@ -64,10 +65,6 @@ namespace SupportBank
                     person.Name = transaction.ToAccount;
                     people.Add(transaction.ToAccount, person);
                 }
-                people[transaction.FromAccount].Balance -= transaction.Amount;
-                people[transaction.ToAccount].Balance += transaction.Amount;
-                people[transaction.FromAccount].transactions.Add(transaction);
-                people[transaction.ToAccount].transactions.Add(transaction);
             }
             return people;
         }
@@ -87,7 +84,7 @@ namespace SupportBank
             {
                 Console.WriteLine("Input \"{0}\" was not valid, please ensure data is in the correct format. This line has been skipped.", string.Join(",", transactionAr));
                 Console.WriteLine();
-                Program.Logissue(String.Format("Invalid line {0} , \"{1}\" was read from file", lineNumber, string.Join(",", transactionAr)), LogLevel.Warn);
+                Program.logger.Log(LogLevel.Warn, String.Format("Invalid line {0} , \"{1}\" was read from file", lineNumber, string.Join(",", transactionAr)));
                 return null;
             }
             return transaction;

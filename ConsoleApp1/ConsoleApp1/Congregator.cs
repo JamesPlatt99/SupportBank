@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,7 +22,7 @@ namespace SupportBank
                 }
                 catch (Exception e)
                 {
-                    Program.Logissue("Invalid file format :" + e.Message, NLog.LogLevel.Error);
+                    Program.logger.Log(LogLevel.Error, "Invalid file format " + e.Message);
                 }
             }
             System.IO.File.Delete("Global.json");
