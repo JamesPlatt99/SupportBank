@@ -1,7 +1,7 @@
-﻿using NLog;
+﻿using CsvHelper;
+using NLog;
 using System;
 using System.Collections.Generic;
-using CsvHelper;
 
 namespace SupportBank
 {
@@ -39,8 +39,8 @@ namespace SupportBank
                 {
                     Console.WriteLine("Error:");
                     Console.WriteLine("   " + e.Message);
-                    Console.WriteLine("   Line {0} is in an incorrect format, skipping line.",lineNumber);
-                    Program.Logissue(String.Format("{0} : Occurred while reading csv file.",e.Message),LogLevel.Error);
+                    Console.WriteLine("   Line {0} is in an incorrect format, skipping line.", lineNumber);
+                    Program.Logissue(String.Format("{0} : Occurred while reading csv file.", e.Message), LogLevel.Error);
                 }
             }
             return transactions;
@@ -50,7 +50,7 @@ namespace SupportBank
         {
             List<Transaction> transactions = GetTransactions();
             Dictionary<string, Person> people = new Dictionary<string, Person>();
-            foreach(Transaction transaction in transactions)
+            foreach (Transaction transaction in transactions)
             {
                 if (!people.ContainsKey(transaction.FromAccount))
                 {
@@ -68,11 +68,10 @@ namespace SupportBank
                 people[transaction.ToAccount].Balance += transaction.Amount;
                 people[transaction.FromAccount].transactions.Add(transaction);
                 people[transaction.ToAccount].transactions.Add(transaction);
-
             }
             return people;
         }
-        
+
         public Transaction CreateTransaction(string[] transactionAr, Person payer, Person payee, int lineNumber)
         {
             Transaction transaction = new Transaction();

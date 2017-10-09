@@ -27,8 +27,9 @@ namespace SupportBank
                 {
                     case 0:
                         Logissue("The user chose the default option", LogLevel.Info);
-                        Default def = new Default();                        
+                        Default def = new Default();
                         break;
+
                     case 1:
                         Logissue("The user chose to import.", LogLevel.Info);
                         Import import = new Import();
@@ -91,7 +92,7 @@ namespace SupportBank
             logger.Log(logEvent);
         }
 
-        public static string chooseFile()
+        public static string ChooseFile()
         {
             string[] files = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory());
             int choice;
@@ -115,7 +116,7 @@ namespace SupportBank
             return validFiles[choice];
         }
 
-        public static string chooseFileType(string method)
+        public static string ChooseFileType(string method)
         {
             string input;
             int output;

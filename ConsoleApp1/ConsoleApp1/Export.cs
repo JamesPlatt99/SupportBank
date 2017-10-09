@@ -10,7 +10,7 @@ namespace SupportBank
         {
             List<Transaction> transactions = new List<Transaction>();
             string input = "y";
-            string fileType = Program.chooseFileType("export to");
+            string fileType = Program.ChooseFileType("export to");
             string fileName = String.Format("{0}.{1}", GetFileName(), fileType);
 
             while (input == "y")
@@ -30,7 +30,7 @@ namespace SupportBank
 
         public void Start(List<Transaction> transactions, string fileName)
         {
-            string fileType = Program.chooseFileType("convert to");
+            string fileType = Program.ChooseFileType("convert to");
             CreatorFactory creatorFactory = new CreatorFactory();
             ICreator creator = creatorFactory.GetCreator(fileName);
             creator.CreateFile(transactions);

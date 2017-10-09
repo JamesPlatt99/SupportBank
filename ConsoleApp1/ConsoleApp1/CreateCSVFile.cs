@@ -1,7 +1,7 @@
-﻿using NLog;
+﻿using CsvHelper;
+using NLog;
 using System;
 using System.Collections.Generic;
-using CsvHelper;
 
 namespace SupportBank
 {

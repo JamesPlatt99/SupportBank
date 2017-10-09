@@ -10,7 +10,7 @@ namespace SupportBank
         {
             Dictionary<string, Person> people = new Dictionary<string, Person>();
             string filePath;
-            filePath = Program.chooseFile();
+            filePath = Program.ChooseFile();
             ParserFactory parserFactory = new ParserFactory();
             people = parserFactory.GetParser(filePath).GetPeople();
             int menuOption;

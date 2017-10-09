@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SupportBank
 {
-    class Congregator
+    internal class Congregator
     {
         public void CreateGlobalFile()
         {
@@ -21,7 +19,7 @@ namespace SupportBank
                 {
                     transactions = transactions.Concat(parserFactory.GetParser(file).GetTransactions()).ToList();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Program.Logissue("Invalid file format :" + e.Message, NLog.LogLevel.Error);
                 }
@@ -29,6 +27,7 @@ namespace SupportBank
             System.IO.File.Delete("Global.json");
             creator.CreateFile(transactions);
         }
+
         private List<string> GetValidFiles()
         {
             string[] files = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory());

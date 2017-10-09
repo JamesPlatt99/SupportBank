@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace SupportBank
 {
-    class Default
+    internal class Default
     {
         public Default()
         {
@@ -29,9 +25,11 @@ namespace SupportBank
                     case 1:
                         AddTransaction(name, transactions);
                         break;
+
                     case 2:
                         DisplayBalance(name, people);
                         break;
+
                     case 3:
                         DisplayTransactions(name, people);
                         break;
@@ -39,8 +37,8 @@ namespace SupportBank
                 Console.Write("...");
                 Console.ReadLine();
             }
-
         }
+
         private void AddTransaction(string name, List<Transaction> transactions)
         {
             transactions.Add(CreateTransaction(name));
@@ -48,6 +46,7 @@ namespace SupportBank
             CreateJsonFile creator = new CreateJsonFile(path);
             creator.CreateFile(transactions);
         }
+
         private Transaction CreateTransaction(string name)
         {
             Transaction transaction = new Transaction();
@@ -78,14 +77,16 @@ namespace SupportBank
             Console.WriteLine("Please enter a reason for this transaction: ");
             transaction.Narrative = Console.ReadLine();
 
-            while(!double.TryParse(amount, out amountVal)) { 
+            while (!double.TryParse(amount, out amountVal))
+            {
                 Console.Write("Please enter the value of the transaction: £");
                 amount = Console.ReadLine();
             }
             transaction.Amount = amountVal;
             return transaction;
         }
-        private void DisplayBalance(string name, Dictionary<string,Person> people)
+
+        private void DisplayBalance(string name, Dictionary<string, Person> people)
         {
             double balance;
             if (people.ContainsKey(name))
@@ -98,18 +99,20 @@ namespace SupportBank
             }
             Console.WriteLine("Your balance is £{0:0.00}.", balance);
         }
+
         private void DisplayTransactions(string name, Dictionary<string, Person> people)
         {
             Console.WriteLine();
             Console.WriteLine("Date, To Account, From Account, Description, Amount");
             if (people.ContainsKey(name))
             {
-                foreach(Transaction transaction in people[name].transactions)
+                foreach (Transaction transaction in people[name].transactions)
                 {
                     Console.WriteLine("{0:dd/MM/yyyy}, {1}, {2}, {3}, £{4:0.00}", transaction.Date, transaction.ToAccount, transaction.FromAccount, transaction.Narrative, transaction.Amount);
                 }
             }
         }
+
         private int GetChoice()
         {
             Boolean validInput = false;
@@ -129,7 +132,7 @@ namespace SupportBank
                 input = Console.ReadLine();
                 if (int.TryParse(input, out output))
                 {
-                    if(output > 0 && output <= 4)
+                    if (output > 0 && output <= 4)
                     {
                         return output;
                     }
@@ -138,6 +141,7 @@ namespace SupportBank
             }
             return 0;
         }
+
         private string GetName()
         {
             string name = "";
