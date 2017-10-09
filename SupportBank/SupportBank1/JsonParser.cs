@@ -46,9 +46,10 @@ namespace SupportBank
             List<string> jsonObjects = parseFile();
             foreach (string jsonObject in jsonObjects)
             {
-                try { 
-                transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
-                transactions.Add(transaction);
+                try
+                {
+                    transaction = JsonConvert.DeserializeObject<Transaction>(jsonObject + '}');
+                    transactions.Add(transaction);
                 }
                 catch (Exception e)
                 {

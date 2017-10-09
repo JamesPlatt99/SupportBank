@@ -20,7 +20,7 @@ namespace SupportBank
                 input = Console.ReadLine().ToLower()[0].ToString();
                 Console.WriteLine();
             }
-            Program.logger.Log(LogLevel.Info, String.Format("The user entered a list of {0} transactions.", transactions.Count + 1));
+            Program.logger.Log(LogLevel.Info, string.Format("The user entered a list of {0} transactions.", transactions.Count + 1));
 
             CreateFile(transactions);
         }
@@ -32,7 +32,6 @@ namespace SupportBank
             CreatorFactory creatorFactory = new CreatorFactory();
             ICreator creator = creatorFactory.GetCreator(fileName);
             creator.CreateFile(transactions);
-
         }
 
         public void Start(List<Transaction> transactions, string fileName)
@@ -62,7 +61,7 @@ namespace SupportBank
             DateTime date;
 
             Console.Write("Date: ");
-            while (!DateTime.TryParse(input = Console.ReadLine(), out date))
+            while (!DateTime.TryParse(Console.ReadLine(), out date))
             {
                 Console.WriteLine("Invalid input, please try again.");
             }

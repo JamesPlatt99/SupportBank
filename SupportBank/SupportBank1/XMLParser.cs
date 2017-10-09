@@ -30,12 +30,13 @@ namespace SupportBank
             Transaction transaction = new Transaction();
             try
             {
-            transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"", "")));
-            transaction.FromAccount = supportTransaction.From;
-            transaction.ToAccount = supportTransaction.To;
-            transaction.Amount = Double.Parse(supportTransaction.Value);
-            transaction.Narrative = supportTransaction.Description;
-            }catch(Exception e)
+                transaction.Date = DateTime.FromOADate(Double.Parse(supportTransaction.Date.Replace("\"", "")));
+                transaction.FromAccount = supportTransaction.From;
+                transaction.ToAccount = supportTransaction.To;
+                transaction.Amount = Double.Parse(supportTransaction.Value);
+                transaction.Narrative = supportTransaction.Description;
+            }
+            catch (Exception e)
             {
                 Console.ForegroundColor = System.ConsoleColor.Red;
                 Console.WriteLine("Input was not valid, please ensure data is in the correct format. This line has been skipped.");
@@ -74,7 +75,7 @@ namespace SupportBank
             {
                 transaction = ConvertToTransaction(curTransaction);
                 if (transaction != null)
-                { 
+                {
                     transactions.Add(transaction);
                 }
             }

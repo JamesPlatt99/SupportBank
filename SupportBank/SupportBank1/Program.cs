@@ -148,7 +148,7 @@ namespace SupportBank
             csv,
             json,
             xml
-        }        
+        }
 
         private static void ConfigureNLog()
         {
