@@ -21,10 +21,14 @@ namespace SupportBank
 
             MainMenu();
             int choice;
-            while ((choice = ValidInput(1, 4)) != 4)
+            while ((choice = ValidInput(0, 4)) != 4)
             {
                 switch (choice)
                 {
+                    case 0:
+                        Logissue("The user chose the default option", LogLevel.Info);
+                        Default def = new Default();                        
+                        break;
                     case 1:
                         Logissue("The user chose to import.", LogLevel.Info);
                         Import import = new Import();
@@ -51,6 +55,7 @@ namespace SupportBank
         {
             Console.WriteLine("Support Bank");
             Console.WriteLine("-----------------------------");
+            Console.WriteLine(" 0. Default");
             Console.WriteLine(" 1. Import");
             Console.WriteLine(" 2. Export");
             Console.WriteLine(" 3. Convert");
