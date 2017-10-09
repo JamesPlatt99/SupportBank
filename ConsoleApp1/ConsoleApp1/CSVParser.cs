@@ -21,7 +21,7 @@ namespace SupportBank
             var csv = new CsvReader(file);
             Transaction transaction;
             int lineNumber = 0;
-
+            csv.Read();
             while (csv.Read())
             {
                 lineNumber++;

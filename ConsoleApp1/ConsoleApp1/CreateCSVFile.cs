@@ -19,10 +19,7 @@ namespace SupportBank
             System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
             var csv = new CsvWriter(file);
             file.WriteLine("Date,From,To,Narrative,Amount\n");
-            foreach (Transaction transaction in transactions)
-            {
-                csv.WriteRecord(transaction);
-            }
+            csv.WriteRecords(transactions);
             file.Close();
             Program.Logissue(String.Format("The file {0} was created successfully.", fileName), LogLevel.Info);
         }
