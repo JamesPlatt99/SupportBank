@@ -1,9 +1,9 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class Congregator
     {

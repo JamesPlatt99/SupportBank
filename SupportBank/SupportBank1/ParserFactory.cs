@@ -1,4 +1,4 @@
-﻿namespace SupportBank
+﻿namespace ConsoleApp1
 {
     internal class ParserFactory
     {

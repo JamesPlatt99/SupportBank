@@ -1,10 +1,10 @@
-﻿using NLog;
+﻿using System;
+using System.Collections.Generic;
+using NLog;
 using NLog.Config;
 using NLog.Targets;
-using System;
-using System.Collections.Generic;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class Program
     {

@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class JsonParser : IParser
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     public class Transaction
     {

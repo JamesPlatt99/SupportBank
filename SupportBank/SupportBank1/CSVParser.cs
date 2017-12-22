@@ -1,9 +1,9 @@
-﻿using CsvHelper;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CsvHelper;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class CSVParser : IParser
     {

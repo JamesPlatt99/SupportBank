@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal interface IParser
     {

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     public class SupportTransaction
     {

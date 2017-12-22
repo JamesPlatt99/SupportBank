@@ -1,27 +1,27 @@
-﻿using CsvHelper;
-using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CsvHelper;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class CreateCSVFile : ICreator
     {
-        private string fileName;
+        private readonly string _fileName;
 
-        public CreateCSVFile(string filename)
+        public CreateCSVFile(string fileName)
         {
-            fileName = filename;
+            _fileName = fileName;
         }
 
-        public void CreateFile(List<Transaction> transactions)
+        public void CreateFile(IEnumerable<Transaction> transactions)
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
-            var csv = new CsvWriter(file);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(_fileName);
+            CsvWriter csv = new CsvWriter(file);
             file.WriteLine("Date,From,To,Narrative,Amount\n");
             csv.WriteRecords(transactions);
             file.Close();
-            Program.logger.Log(LogLevel.Info, String.Format("The file {0} was created successfully.", fileName));
+            Program.logger.Log(LogLevel.Info, $"The file {_fileName} was created successfully.");
         }
     }
 }

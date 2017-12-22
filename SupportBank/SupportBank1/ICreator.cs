@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal interface ICreator
     {
-        void CreateFile(List<Transaction> transactions);
+        void CreateFile(IEnumerable<Transaction> transactions);
     }
 }

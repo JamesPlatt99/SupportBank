@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class Default
     {
         public Default()
         {
             string name = GetUsersName();
-            int choice = 0;
-            Dictionary<string, Person> people = new Dictionary<string, Person>();
-            JsonParser parser = new JsonParser("Global.json");
-            List<Transaction> transactions;
+            int choice;
             Congregator congregator = new Congregator();
 
             while ((choice = GetFunctionChoice()) != 4)
             {
-                parser = new JsonParser("Global.json");
+                JsonParser parser = new JsonParser("Global.json");
                 congregator.CreateGlobalFile();
-                transactions = parser.GetTransactions();
-                people = parser.GetPeople();
+                List<Transaction> transactions = parser.GetTransactions();
+                Dictionary<string, Person> people = parser.GetPeople();
                 switch (choice)
                 {
                     case 1:
@@ -42,7 +39,7 @@ namespace SupportBank
         private void AddTransaction(string name, List<Transaction> transactions)
         {
             transactions.Add(CreateTransaction(name));
-            string path = "Other.json";
+            const string path = "Other.json";
             CreateJsonFile creator = new CreateJsonFile(path);
             creator.CreateFile(transactions);
         }
@@ -50,7 +47,6 @@ namespace SupportBank
         private Transaction CreateTransaction(string name)
         {
             Transaction transaction = new Transaction();
-            int input;
             string amount = "";
             double amountVal;
 
@@ -60,7 +56,7 @@ namespace SupportBank
             Console.WriteLine("  2. Send");
 
             transaction.Date = DateTime.Now;
-            input = Program.GetIntValueBetween(1, 2);
+            int input = Program.GetIntValueBetween(1, 2);
             if (input == 1)
             {
                 transaction.ToAccount = name;
@@ -86,39 +82,25 @@ namespace SupportBank
             return transaction;
         }
 
-        private void DisplayBalance(string name, Dictionary<string, Person> people)
+        private void DisplayBalance(string name, IReadOnlyDictionary<string, Person> people)
         {
-            double balance;
-            if (people.ContainsKey(name))
-            {
-                balance = people[name].Balance;
-            }
-            else
-            {
-                balance = 0;
-            }
+            double balance = people.ContainsKey(name) ? people[name].Balance : 0;
             Console.WriteLine("Your balance is £{0:0.00}.", balance);
         }
-
+        
         private void DisplayTransactions(string name, Dictionary<string, Person> people)
         {
             Console.WriteLine();
             Console.WriteLine("Date, To Account, From Account, Description, Amount");
-            if (people.ContainsKey(name))
+            if (!people.ContainsKey(name)) return;
+            foreach (Transaction transaction in people[name].transactions)
             {
-                foreach (Transaction transaction in people[name].transactions)
-                {
-                    Console.WriteLine("{0:dd/MM/yyyy}, {1}, {2}, {3}, £{4:0.00}", transaction.Date, transaction.ToAccount, transaction.FromAccount, transaction.Narrative, transaction.Amount);
-                }
+                Console.WriteLine("{0:dd/MM/yyyy}, {1}, {2}, {3}, £{4:0.00}", transaction.Date, transaction.ToAccount, transaction.FromAccount, transaction.Narrative, transaction.Amount);
             }
         }
 
         private int GetFunctionChoice()
         {
-            Boolean validInput = false;
-            int output;
-            string input;
-
             Console.WriteLine();
             Console.WriteLine("What would you like to do?");
             Console.WriteLine("  1. Create new transaction.");
@@ -126,11 +108,11 @@ namespace SupportBank
             Console.WriteLine("  3. View a list of your transactions.");
             Console.WriteLine();
             Console.WriteLine("  4. Back");
-            while (!validInput)
+            while (true)
             {
                 Console.Write("Enter an option: ");
-                input = Console.ReadLine();
-                if (int.TryParse(input, out output))
+                string input = Console.ReadLine();
+                if (int.TryParse(input, out int output))
                 {
                     if (output > 0 && output <= 4)
                     {
@@ -139,14 +121,13 @@ namespace SupportBank
                 }
                 Console.WriteLine("Invalid input.");
             }
-            return 0;
         }
 
         private string GetUsersName()
         {
             string name = "";
             Console.WriteLine();
-            while (name.Length == 0)
+            while (name != null && name.Length == 0)
             {
                 Console.Write("Please enter your name: ");
                 name = Console.ReadLine();

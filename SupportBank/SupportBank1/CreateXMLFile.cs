@@ -1,21 +1,21 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     internal class CreateXMLFile : ICreator
     {
-        private string fileName;
+        private readonly string _fileName;
 
-        public CreateXMLFile(string filename)
+        public CreateXMLFile(string fileName)
         {
-            fileName = filename;
+            _fileName = fileName;
         }
 
-        public void CreateFile(List<Transaction> transactions)
+        public void CreateFile(IEnumerable<Transaction> transactions)
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(fileName);
+            System.IO.StreamWriter file = new System.IO.StreamWriter(_fileName);
             file.WriteLine("<?xml version=\"1.0\" encoding=\"utf - 8\"?>");
             file.WriteLine("<TransactionList>");
             foreach (Transaction transaction in transactions)
@@ -31,7 +31,7 @@ namespace SupportBank
             }
             file.WriteLine("</TransactionList>");
             file.Close();
-            Program.logger.Log(LogLevel.Info, String.Format("The file {0} was created successfully.", fileName));
+            Program.logger.Log(LogLevel.Info, $"The file {_fileName} was created successfully.");
         }
     }
 }

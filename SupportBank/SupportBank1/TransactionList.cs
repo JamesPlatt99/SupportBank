@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     [XmlRoot("TransactionList")]
     public class TransactionList

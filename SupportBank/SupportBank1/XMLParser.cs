@@ -1,10 +1,10 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using NLog;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     public class XMLParser : IParser
     {

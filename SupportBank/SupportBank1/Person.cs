@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SupportBank
+namespace ConsoleApp1
 {
     public class Person
     {
